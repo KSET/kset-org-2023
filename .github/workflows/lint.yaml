@@ -1,0 +1,41 @@
+name: lint
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
+jobs:
+  lint:
+    name: Run linter for Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [16, 18]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          cache: "yarn"
+
+      - name: Install dependencies ‍💻
+        run: yarn install --immutable --inline-builds
+
+      - name: Run linter 👀
+        run: yarn lint
