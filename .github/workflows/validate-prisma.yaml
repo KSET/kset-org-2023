@@ -37,5 +37,8 @@ jobs:
       - name: Install dependencies ‍💻
         run: yarn install --immutable --inline-builds
 
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
       - name: Run prisma validator 👀
         run: yarn prisma validate
