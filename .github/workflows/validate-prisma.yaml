@@ -15,8 +15,13 @@ env:
 
 jobs:
   validate-prisma:
-    name: Validate Prisma schema
+    name: Validate Prisma schema on Node ${{ matrix.node }}
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [latest]
 
     steps:
       - name: Checkout 🛎

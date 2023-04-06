@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16, 18]
+        node: [18, lts/*, latest]
 
     steps:
       - name: Checkout 🛎
