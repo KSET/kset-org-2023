@@ -1,0 +1,9 @@
+procs:
+  app:
+    cmd: ["yarn", "dev"]
+  caddy:
+    cmd: ["sudo", "caddy", "run"]
+    autostart: false
+  db-studio:
+    cmd: ["yarn", "prisma", "studio", "--browser", "none"]
+    autostart: false
