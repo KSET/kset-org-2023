@@ -4,7 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
@@ -51,16 +51,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider<GoogleProfile>({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-      async profile(profile, tokens) {
-        console.log({ profile, tokens });
-
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture
-        };
-      },
     }),
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
