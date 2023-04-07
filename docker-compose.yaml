@@ -7,3 +7,5 @@ services:
       dockerfile: .docker/app/Dockerfile
     env_file:
       - .env
+    labels:
+      - org.kset.tag=kset-org-2023
