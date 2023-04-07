@@ -8,6 +8,8 @@
 const config = {
   reactStrictMode: true,
 
+  output: "standalone",
+
   poweredByHeader: false,
 
   compress: false,
