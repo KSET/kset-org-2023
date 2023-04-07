@@ -17,5 +17,5 @@ export const getAppUrl = () => {
   if (process.env.APP_URL) {
     return process.env.APP_URL;
   }
-  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
+  return `http://127.0.0.1:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };

@@ -38,7 +38,7 @@ const MyApp: AppType<{
       </Head>
       <CookiesProvider cookies={cookies}>
         <SessionProvider session={session}>
-          <Suspense>
+          <Suspense fallback={<h1>Loading...</h1>}>
             {getLayout ? (
               getLayout(<Component {...pageProps} />)
             ) : (
