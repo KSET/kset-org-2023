@@ -26,6 +26,7 @@ next-env.d.ts
 .DS_Store
 *.pem
 .git
+.gitignore
 
 # debug
 npm-debug.log*

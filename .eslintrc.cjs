@@ -46,6 +46,7 @@ const config = {
       {
         "args": "after-used",
         "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
         "caughtErrors": "none",
       },
     ],

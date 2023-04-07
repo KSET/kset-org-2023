@@ -1,0 +1,58 @@
+name: Deploy to production
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  lint:
+    name: Run linter for Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [18, lts/*, latest]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          cache: "yarn"
+
+      - name: Install dependencies ‍💻
+        run: yarn install --immutable --inline-builds
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
+      - name: Run linter 👀
+        run: yarn lint
+
+  deploy:
+    needs: [lint]
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged }}
+    env:
+      SHA: ${{ github.sha }}
+    steps:
+      - name: Deploying to production
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: stipe.kset.org
+          username: github_kset-org-2023
+          port: 2222
+          key: ${{ secrets.SSH_KEY }}
+          envs: SHA
+          script_stop: true
+          script: |
+            doas /docker/kset-org-2023/deploy.sh

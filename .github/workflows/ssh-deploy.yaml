@@ -1,0 +1,23 @@
+name: Deploy to production manually
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to production manually
+    runs-on: ubuntu-latest
+    env:
+      SHA: ${{ github.sha }}
+    steps:
+      - name: Deploying to production
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: stipe.kset.org
+          username: github_kset-org-2023
+          port: 2222
+          key: ${{ secrets.SSH_KEY }}
+          envs: SHA
+          script_stop: true
+          script: |
+            doas /docker/kset-org-2023/deploy.sh
