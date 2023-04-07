@@ -1,9 +1,13 @@
-import { api } from "~/utils/api";
+import { api } from "~/utils/queryApi";
 
-const Home = async () => {
-  const resp = await api.example.hello.query({
+const Home = () => {
+  const resp = api.example.hello.useQuery({
     text: "World",
   });
+
+  if (resp.isLoading) {
+    return <span>Loading...</span>;
+  }
 
   return (
     <>
@@ -11,7 +15,7 @@ const Home = async () => {
       <p>Budući da su priznavanje urođenog dostojanstva</p>
       <p>БУДУЂИ да су признавање урођеног достојанства</p>
       <p>Пошто је признавање урођеног достојанства</p>
-      <span>{resp.greeting}</span>
+      <span>{resp.data?.greeting}</span>
     </>
   );
 };

@@ -11,6 +11,9 @@ export const getAppUrl = () => {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
+  if (process.env.INTERNAL_ADDRESS) {
+    return `http://${process.env.INTERNAL_ADDRESS}:${process.env.PORT ?? 3000}`;
+  }
   if (process.env.APP_URL) {
     return process.env.APP_URL;
   }

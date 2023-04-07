@@ -8,9 +8,18 @@
 const config = {
   reactStrictMode: true,
 
-  experimental: {
-    appDir: true,
-    serverComponentsExternalPackages: ["@prisma/client"],
+  poweredByHeader: false,
+
+  compress: false,
+
+  devIndicators: {
+    buildActivity: true,
+    buildActivityPosition: "bottom-left",
   },
+
+  i18n: {
+    defaultLocale: "hr",
+    locales: ["hr"],
+  }
 };
 export default config;
