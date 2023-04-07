@@ -8,7 +8,37 @@ on:
       - closed
 
 jobs:
+  lint:
+    name: Run linter for Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [18, lts/*, latest]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          cache: "yarn"
+
+      - name: Install dependencies ‍💻
+        run: yarn install --immutable --inline-builds
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
+      - name: Run linter 👀
+        run: yarn lint
+
   deploy:
+    needs: [lint]
     name: Deploy to production
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged }}
