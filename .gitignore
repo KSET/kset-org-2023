@@ -35,6 +35,10 @@ yarn-error.log*
 .env
 .env*.local
 
+# local overrides
+docker-compose.*.yml
+docker-compose.*.yaml
+
 # vercel
 .vercel
 
