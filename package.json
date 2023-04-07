@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
+    "sharp": "^0.32.0",
     "superjson": "1.12.2",
     "universal-cookie": "^4.0.4",
     "zod": "^3.21.4"
@@ -33,6 +34,7 @@
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/sharp": "^0.31.1",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "autoprefixer": "^10.4.14",
@@ -47,7 +49,6 @@
     "prettier-plugin-tailwindcss": "^0.2.6",
     "prisma": "^4.11.0",
     "sass": "^1.60.0",
-    "sharp": "^0.32.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.2"
   },
