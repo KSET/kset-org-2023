@@ -1,12 +1,17 @@
-name: Deploy to production manually
+name: Deploy to production
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   deploy:
-    name: Deploy to production manually
+    name: Deploy to production
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged }}
     env:
       SHA: ${{ github.sha }}
     steps:
