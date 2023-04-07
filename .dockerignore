@@ -1,0 +1,45 @@
+# docker files
+.docker
+.dockerignore
+docker-compose.*.yml
+docker-compose.*.yaml
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# database
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+.env
+
+# misc
+.DS_Store
+*.pem
+.git
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# editors
+.vscode/
+.idea/
+.fleet/

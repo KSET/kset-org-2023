@@ -14,7 +14,7 @@ import { type AppRouter } from "~/server/api/root";
 import { getBaseUrl } from "./url";
 
 /** A set of type-safe react-query hooks for your tRPC API. */
-export const queryApi = createTRPCNext<AppRouter>({
+export const api = createTRPCNext<AppRouter>({
   config() {
     return {
       /**
@@ -39,6 +39,17 @@ export const queryApi = createTRPCNext<AppRouter>({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
+
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            suspense: true,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            notifyOnChangeProps: "all",
+          },
+        },
+      },
     };
   },
   /**
