@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import "~/styles/nprogress.scss";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type AppContext, type AppType } from "next/app";
@@ -10,6 +11,7 @@ import { Suspense } from "react";
 import { CookiesProvider } from "react-cookie";
 import UniversalCookie from "universal-cookie";
 
+import { useLoadingProgress } from "~/hooks/loading-progress";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { api } from "~/utils/queryApi";
@@ -25,6 +27,8 @@ const MyApp: AppType<{
   session: Session | null;
   dehydratedState?: unknown;
 }> = ({ Component, pageProps: { session, ...pageProps }, ...rest }) => {
+  useLoadingProgress();
+
   const { getLayout } = Component as NextPageWithLayout;
 
   const { rawCookies } = rest as typeof rest &
