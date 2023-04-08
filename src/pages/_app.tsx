@@ -7,7 +7,6 @@ import NextApp from "next/app";
 import Head from "next/head";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { Suspense } from "react";
 import { CookiesProvider } from "react-cookie";
 import UniversalCookie from "universal-cookie";
 
@@ -42,15 +41,13 @@ const MyApp: AppType<{
       </Head>
       <CookiesProvider cookies={cookies}>
         <SessionProvider session={session}>
-          <Suspense fallback={<h1>Loading...</h1>}>
-            {getLayout ? (
-              getLayout(<Component {...pageProps} />)
-            ) : (
-              <MainLayout>
-                <Component {...pageProps} />
-              </MainLayout>
-            )}
-          </Suspense>
+          {getLayout ? (
+            getLayout(<Component {...pageProps} />)
+          ) : (
+            <MainLayout>
+              <Component {...pageProps} />
+            </MainLayout>
+          )}
           <ReactQueryDevtools />
         </SessionProvider>
       </CookiesProvider>
