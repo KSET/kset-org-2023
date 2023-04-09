@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const Vijesti: NextPage = () => {
+const PageNewsHome: NextPage = () => {
   return (
     <>
       <NextSeo title="Vijesti" />
@@ -10,4 +10,4 @@ const Vijesti: NextPage = () => {
   );
 };
 
-export default Vijesti;
+export default PageNewsHome;

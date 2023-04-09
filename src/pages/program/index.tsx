@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const Dogadaji: NextPage = () => {
+const PageProgramHome: NextPage = () => {
   return (
     <>
       <NextSeo title="Program" />
@@ -10,4 +10,4 @@ const Dogadaji: NextPage = () => {
   );
 };
 
-export default Dogadaji;
+export default PageProgramHome;

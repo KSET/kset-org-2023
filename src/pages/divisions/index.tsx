@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const ClubDivisions: NextPage = () => {
+const PageDivisionsHome: NextPage = () => {
   return (
     <>
       <NextSeo title="Sekcije" />
@@ -10,4 +10,4 @@ const ClubDivisions: NextPage = () => {
   );
 };
 
-export default ClubDivisions;
+export default PageDivisionsHome;

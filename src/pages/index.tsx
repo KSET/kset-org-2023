@@ -1,6 +1,6 @@
 import { api } from "~/utils/queryApi";
 
-const Home = () => {
+const PageIndex = () => {
   const [resp] = api.example.hello.useSuspenseQuery({
     text: "World",
   });
@@ -11,9 +11,9 @@ const Home = () => {
       <p>Budući da su priznavanje urođenog dostojanstva</p>
       <p>БУДУЂИ да су признавање урођеног достојанства</p>
       <p>Пошто је признавање урођеног достојанства</p>
-      <span>{resp.greeting}</span>
+      <pre>{resp.greeting}</pre>
     </>
   );
 };
 
-export default Home;
+export default PageIndex;

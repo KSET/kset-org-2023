@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const Club: NextPage = () => {
+const PageAboutHome: NextPage = () => {
   return (
     <>
       <NextSeo title="O klubu" />O klubu
@@ -9,4 +9,4 @@ const Club: NextPage = () => {
   );
 };
 
-export default Club;
+export default PageAboutHome;

@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const ClubMultimedia: NextPage = () => {
+const PageMultimediaHome: NextPage = () => {
   return (
     <>
       <NextSeo title="Multimedia" />
@@ -10,4 +10,4 @@ const ClubMultimedia: NextPage = () => {
   );
 };
 
-export default ClubMultimedia;
+export default PageMultimediaHome;

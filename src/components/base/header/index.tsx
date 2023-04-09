@@ -7,27 +7,27 @@ export const BaseHeader: React.FC = () => {
   const headerItems = [
     {
       text: "Program",
-      href: "/arhiva/dogadaji",
+      href: "/program",
     },
     {
       text: "Vijesti",
-      href: "/arhiva/vijesti",
+      href: "/news",
     },
     {
       text: "O klubu",
-      href: "/club",
+      href: "/about",
     },
     {
       text: "Sekcije",
-      href: "/club/divisions",
+      href: "/divisions",
     },
     {
       text: "Kontakt",
-      href: "/kontakt",
+      href: "/contact",
     },
     {
       text: "Multimedija",
-      href: "/club/multimedia",
+      href: "/multimedia",
     },
   ];
 

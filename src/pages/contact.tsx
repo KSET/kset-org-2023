@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-const Kontakt: NextPage = () => {
+const PageContact: NextPage = () => {
   return (
     <>
       <NextSeo title="Kontakt" />
@@ -10,4 +10,4 @@ const Kontakt: NextPage = () => {
   );
 };
 
-export default Kontakt;
+export default PageContact;
