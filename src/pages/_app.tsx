@@ -14,6 +14,7 @@ import UniversalCookie from "universal-cookie";
 import { useLoadingProgress } from "~/hooks/loading-progress";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
+import { fontUi } from "~/utils/font";
 import { api } from "~/utils/queryApi";
 
 const getInitialProps = async (app: AppContext) => {
@@ -72,7 +73,7 @@ const MyApp: AppType<{
           {getLayout ? (
             getLayout(<Component {...pageProps} />)
           ) : (
-            <MainLayout>
+            <MainLayout className={fontUi.className}>
               <Component {...pageProps} />
             </MainLayout>
           )}
