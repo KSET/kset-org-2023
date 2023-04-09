@@ -10,6 +10,10 @@ export default {
         secondary: "#28282d",
         "off-black": "#1e1e22",
       },
+      fontFamily: {
+        sans: ["var(--font-family-ui)"],
+        mono: ["var(--font-family-mono)"],
+      },
     },
   },
   plugins: [],
