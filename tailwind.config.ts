@@ -14,6 +14,10 @@ export default {
         sans: ["var(--font-family-ui)"],
         mono: ["var(--font-family-mono)"],
       },
+      container: {
+        center: true,
+        padding: "3rem",
+      },
     },
   },
   plugins: [],

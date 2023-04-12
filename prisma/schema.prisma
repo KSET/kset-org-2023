@@ -7,12 +7,12 @@ generator client {
 
 datasource db {
   //   provider = "sqlite"
-  provider     = "postgresql"
+  provider = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-  url          = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 // ===================
@@ -64,4 +64,526 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// =======================
+// | OLD KSET.org MODELS |
+// =======================
+model auth_group {
+  id                              Int                               @id @default(autoincrement())
+  name                            String                            @unique @db.VarChar(80)
+  auth_group_permissions          auth_group_permissions[]
+  auth_user_groups                auth_user_groups[]
+  grappelli_navigationitem_groups grappelli_navigationitem_groups[]
+  guardian_groupobjectpermission  guardian_groupobjectpermission[]
+}
+
+model auth_group_permissions {
+  id              Int             @id @default(autoincrement())
+  group_id        Int
+  permission_id   Int
+  auth_group      auth_group      @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([group_id, permission_id], map: "auth_group_permissions_group_id_key")
+}
+
+model auth_message {
+  id        Int       @id @default(autoincrement())
+  user_id   Int
+  message   String
+  auth_user auth_user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "auth_message_user_id")
+}
+
+model auth_permission {
+  id                             Int                              @id @default(autoincrement())
+  name                           String                           @db.VarChar(50)
+  content_type_id                Int
+  codename                       String                           @db.VarChar(100)
+  auth_group_permissions         auth_group_permissions[]
+  django_content_type            django_content_type              @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_type_id_refs_id_728de91f")
+  auth_user_user_permissions     auth_user_user_permissions[]
+  guardian_groupobjectpermission guardian_groupobjectpermission[]
+  guardian_userobjectpermission  guardian_userobjectpermission[]
+
+  @@unique([content_type_id, codename], map: "auth_permission_content_type_id_key")
+  @@index([content_type_id], map: "auth_permission_content_type_id")
+}
+
+model auth_user {
+  id                             Int                              @id @default(autoincrement())
+  username                       String                           @unique @db.VarChar(30)
+  first_name                     String                           @db.VarChar(30)
+  last_name                      String                           @db.VarChar(30)
+  email                          String                           @db.VarChar(75)
+  password                       String                           @db.VarChar(128)
+  is_staff                       Boolean
+  is_active                      Boolean
+  is_superuser                   Boolean
+  last_login                     DateTime                         @db.Timestamptz(6)
+  date_joined                    DateTime                         @db.Timestamptz(6)
+  auth_message                   auth_message[]
+  auth_user_groups               auth_user_groups[]
+  auth_user_user_permissions     auth_user_user_permissions[]
+  django_admin_log               django_admin_log[]
+  events_event                   events_event[]
+  grappelli_bookmark             grappelli_bookmark[]
+  grappelli_navigationitem_users grappelli_navigationitem_users[]
+  guardian_userobjectpermission  guardian_userobjectpermission[]
+  savjet_zapisnik                savjet_zapisnik[]
+}
+
+model auth_user_groups {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  group_id   Int
+  auth_group auth_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user  auth_user  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, group_id], map: "auth_user_groups_user_id_key")
+}
+
+model auth_user_user_permissions {
+  id              Int             @id @default(autoincrement())
+  user_id         Int
+  permission_id   Int
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user       auth_user       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, permission_id], map: "auth_user_user_permissions_user_id_key")
+}
+
+model django_admin_log {
+  id                  Int                  @id @default(autoincrement())
+  action_time         DateTime             @db.Timestamptz(6)
+  user_id             Int
+  content_type_id     Int?
+  object_id           String?
+  object_repr         String               @db.VarChar(200)
+  action_flag         Int                  @db.SmallInt
+  change_message      String
+  django_content_type django_content_type? @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user           auth_user            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([content_type_id], map: "django_admin_log_content_type_id")
+  @@index([user_id], map: "django_admin_log_user_id")
+}
+
+model django_content_type {
+  id                             Int                              @id @default(autoincrement())
+  name                           String                           @db.VarChar(100)
+  app_label                      String                           @db.VarChar(100)
+  model                          String                           @db.VarChar(100)
+  auth_permission                auth_permission[]
+  django_admin_log               django_admin_log[]
+  guardian_groupobjectpermission guardian_groupobjectpermission[]
+  guardian_userobjectpermission  guardian_userobjectpermission[]
+  tagging_taggeditem             tagging_taggeditem[]
+
+  @@unique([app_label, model], map: "django_content_type_app_label_key")
+}
+
+model django_flatpage {
+  id                    Int                     @id @default(autoincrement())
+  url                   String                  @db.VarChar(100)
+  title                 String                  @db.VarChar(200)
+  content               String
+  enable_comments       Boolean
+  template_name         String                  @db.VarChar(70)
+  registration_required Boolean
+  django_flatpage_sites django_flatpage_sites[]
+
+  @@index([url], map: "django_flatpage_url")
+  @@index([url], map: "django_flatpage_url_like")
+}
+
+model django_flatpage_sites {
+  id              Int             @id @default(autoincrement())
+  flatpage_id     Int
+  site_id         Int
+  django_site     django_site     @relation(fields: [site_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  django_flatpage django_flatpage @relation(fields: [flatpage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "flatpage_id_refs_id_c0e84f5a")
+
+  @@unique([flatpage_id, site_id], map: "django_flatpage_sites_flatpage_id_key")
+  @@index([flatpage_id], map: "django_flatpage_sites_flatpage_id")
+  @@index([site_id], map: "django_flatpage_sites_site_id")
+}
+
+model django_session {
+  session_key  String   @id @db.VarChar(40)
+  session_data String
+  expire_date  DateTime @db.Timestamptz(6)
+}
+
+model django_site {
+  id                    Int                     @id @default(autoincrement())
+  domain                String                  @db.VarChar(100)
+  name                  String                  @db.VarChar(50)
+  django_flatpage_sites django_flatpage_sites[]
+}
+
+model events_event {
+  id          Int        @id @default(autoincrement())
+  title       String     @db.VarChar(192)
+  date        DateTime   @db.Date
+  time        DateTime?  @db.Time(6)
+  description String?
+  content     String?
+  price       String?    @db.VarChar(16)
+  thumb       String?    @db.VarChar(255)
+  slug        String?    @db.VarChar(128)
+  announce    Boolean?
+  daytime     Boolean?   @default(false)
+  tags        String[]
+  fbeventid   String?    @db.VarChar(25)
+  author_id   Int?
+  auth_user   auth_user? @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_id_refs_id_8795bcdc")
+
+  @@index([author_id], map: "events_event_author_id")
+}
+
+model gallery_album {
+  id                   Int                   @id @default(autoincrement())
+  upload_path          String?               @db.VarChar(255)
+  title                String                @db.VarChar(255)
+  slug                 String                @db.VarChar(50)
+  description          String                @db.VarChar(255)
+  date_of_event        DateTime              @db.Date
+  date_of_upload       DateTime              @db.Timestamptz(6)
+  initial              Boolean
+  thumb                String                @db.VarChar(255)
+  category             String                @db.VarChar(25)
+  photographer_id      Int?                  @default(1)
+  gallery_photographer gallery_photographer? @relation(fields: [photographer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_photographer_id")
+  gallery_image_album  gallery_image_album[]
+
+  @@index([slug], map: "gallery_album_slug")
+  @@index([slug], map: "gallery_album_slug_like")
+}
+
+model gallery_image {
+  id                   Int                   @id @default(autoincrement())
+  title                String                @db.VarChar(255)
+  slug                 String                @db.VarChar(255)
+  caption              String?               @db.VarChar(255)
+  photographer_id      Int?
+  date_of_event        DateTime              @db.Date
+  date_of_upload       DateTime              @db.Timestamptz(6)
+  upload_path          String                @db.VarChar(255)
+  gallery_photographer gallery_photographer? @relation(fields: [photographer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "photographer_id_refs_id_dbca34de")
+  gallery_image_album  gallery_image_album[]
+
+  @@index([photographer_id], map: "gallery_image_photographer_id")
+  @@index([slug], map: "gallery_image_slug")
+  @@index([slug], map: "gallery_image_slug_like")
+}
+
+model gallery_image_album {
+  id            Int           @id @default(autoincrement())
+  image_id      Int
+  album_id      Int
+  gallery_album gallery_album @relation(fields: [album_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "album_id_refs_id_c27f8e91")
+  gallery_image gallery_image @relation(fields: [image_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_id_refs_id_41ea0efd")
+
+  @@unique([image_id, album_id], map: "gallery_image_album_image_id_key")
+  @@index([album_id], map: "gallery_image_album_album_id")
+  @@index([image_id], map: "gallery_image_album_image_id")
+}
+
+model gallery_photographer {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(32)
+  url           String?         @db.VarChar(255)
+  gallery_album gallery_album[]
+  gallery_image gallery_image[]
+}
+
+model grappelli_bookmark {
+  id                     Int                      @id @default(autoincrement())
+  user_id                Int
+  auth_user              auth_user                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grappelli_bookmarkitem grappelli_bookmarkitem[]
+
+  @@index([user_id], map: "grappelli_bookmark_user_id")
+}
+
+model grappelli_bookmarkitem {
+  id                 Int                @id @default(autoincrement())
+  bookmark_id        Int
+  title              String             @db.VarChar(80)
+  link               String             @db.VarChar(200)
+  order              Int
+  grappelli_bookmark grappelli_bookmark @relation(fields: [bookmark_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([bookmark_id], map: "grappelli_bookmarkitem_bookmark_id")
+}
+
+model grappelli_help {
+  id                 Int                  @id @default(autoincrement())
+  title              String               @db.VarChar(50)
+  order              Int
+  grappelli_helpitem grappelli_helpitem[]
+}
+
+model grappelli_helpitem {
+  id             Int            @id @default(autoincrement())
+  help_id        Int
+  title          String         @db.VarChar(200)
+  link           String         @db.VarChar(200)
+  body           String
+  order          Int
+  grappelli_help grappelli_help @relation(fields: [help_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([help_id], map: "grappelli_helpitem_help_id")
+}
+
+model grappelli_navigation {
+  id                       Int                        @id @default(autoincrement())
+  title                    String                     @db.VarChar(30)
+  order                    Int
+  grappelli_navigationitem grappelli_navigationitem[]
+}
+
+model grappelli_navigationitem {
+  id                              Int                               @id @default(autoincrement())
+  navigation_id                   Int
+  title                           String                            @db.VarChar(30)
+  link                            String                            @db.VarChar(200)
+  category                        String                            @db.VarChar(1)
+  order                           Int
+  grappelli_navigation            grappelli_navigation              @relation(fields: [navigation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grappelli_navigationitem_groups grappelli_navigationitem_groups[]
+  grappelli_navigationitem_users  grappelli_navigationitem_users[]
+
+  @@index([navigation_id], map: "grappelli_navigationitem_navigation_id")
+}
+
+model grappelli_navigationitem_groups {
+  id                       Int                      @id @default(autoincrement())
+  navigationitem_id        Int
+  group_id                 Int
+  auth_group               auth_group               @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grappelli_navigationitem grappelli_navigationitem @relation(fields: [navigationitem_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "navigationitem_id_refs_id_8f2cd403")
+
+  @@unique([navigationitem_id, group_id], map: "grappelli_navigationitem_groups_navigationitem_id_key")
+  @@index([group_id], map: "grappelli_navigationitem_groups_group_id")
+  @@index([navigationitem_id], map: "grappelli_navigationitem_groups_navigationitem_id")
+}
+
+model grappelli_navigationitem_users {
+  id                       Int                      @id @default(autoincrement())
+  navigationitem_id        Int
+  user_id                  Int
+  auth_user                auth_user                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grappelli_navigationitem grappelli_navigationitem @relation(fields: [navigationitem_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "navigationitem_id_refs_id_fbdd09fc")
+
+  @@unique([navigationitem_id, user_id], map: "grappelli_navigationitem_users_navigationitem_id_key")
+  @@index([navigationitem_id], map: "grappelli_navigationitem_users_navigationitem_id")
+  @@index([user_id], map: "grappelli_navigationitem_users_user_id")
+}
+
+model guardian_groupobjectpermission {
+  id                  Int                 @id @default(autoincrement())
+  permission_id       Int
+  content_type_id     Int
+  object_pk           String              @db.VarChar(255)
+  group_id            Int
+  django_content_type django_content_type @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_group          auth_group          @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_permission     auth_permission     @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([group_id, permission_id, content_type_id, object_pk], map: "guardian_groupobjectpermission_group_id_key")
+  @@index([content_type_id], map: "guardian_groupobjectpermission_content_type_id")
+  @@index([group_id], map: "guardian_groupobjectpermission_group_id")
+  @@index([permission_id], map: "guardian_groupobjectpermission_permission_id")
+}
+
+model guardian_userobjectpermission {
+  id                  Int                 @id @default(autoincrement())
+  permission_id       Int
+  content_type_id     Int
+  object_pk           String              @db.VarChar(255)
+  user_id             Int
+  django_content_type django_content_type @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_permission     auth_permission     @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user           auth_user           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, permission_id, content_type_id, object_pk], map: "guardian_userobjectpermission_user_id_key")
+  @@index([content_type_id], map: "guardian_userobjectpermission_content_type_id")
+  @@index([permission_id], map: "guardian_userobjectpermission_permission_id")
+  @@index([user_id], map: "guardian_userobjectpermission_user_id")
+}
+
+model members_address {
+  id             Int            @id @default(autoincrement())
+  member_id      Int
+  address        String         @db.VarChar(64)
+  town           String?        @db.VarChar(32)
+  zipcode        String?        @db.VarChar(16)
+  country        String?        @db.VarChar(32)
+  members_member members_member @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([member_id], map: "members_address_member_id")
+}
+
+model members_contact {
+  id           Int     @id @default(autoincrement())
+  member_id    Int
+  contact      String  @db.VarChar(64)
+  contact_type String? @db.VarChar(255)
+  is_private   Boolean
+
+  @@index([member_id], map: "members_contact_member_id")
+}
+
+model members_group {
+  id                      Int                       @id @default(autoincrement())
+  name                    String                    @db.VarChar(32)
+  slug                    String                    @db.VarChar(50)
+  parent_id               Int?
+  description             String?                   @db.VarChar(128)
+  members_group           members_group?            @relation("members_groupTomembers_group", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "parent_id_refs_id_bf804683")
+  other_members_group     members_group[]           @relation("members_groupTomembers_group")
+  members_membergrouplink members_membergrouplink[]
+
+  @@index([parent_id], map: "members_group_parent_id")
+  @@index([slug], map: "members_group_slug")
+  @@index([slug], map: "members_group_slug_like")
+}
+
+model members_import {
+  id       Int     @id(map: "members_import_id_pk") @default(autoincrement())
+  ime      String? @db.VarChar(255)
+  prezime  String? @db.VarChar(255)
+  nadimak  String? @db.VarChar(255)
+  email    String? @db.VarChar(255)
+  telefon  String? @db.VarChar(255)
+  adresa   String? @db.VarChar(255)
+  pbr      String? @db.VarChar(255)
+  grad     String? @db.VarChar(255)
+  drzava   String? @db.VarChar(255)
+  adresa2  String? @db.VarChar(255)
+  pbr2     String? @db.VarChar(255)
+  grad2    String? @db.VarChar(255)
+  sekcija  String? @db.VarChar(255)
+  crvena   String? @db.VarChar(255)
+  period   String? @db.VarChar(255)
+  komentar String? @db.VarChar(255)
+}
+
+model members_member {
+  id                        Int                        @id @default(autoincrement())
+  card_id                   String?                    @db.VarChar(32)
+  name                      String                     @db.VarChar(32)
+  surname                   String                     @db.VarChar(64)
+  nickname                  String?                    @db.VarChar(32)
+  username                  String                     @unique @db.VarChar(32)
+  password                  String?                    @db.VarChar(255)
+  birth                     DateTime?                  @db.Date
+  death                     DateTime?                  @db.Date
+  comment                   String?
+  image                     String?                    @db.VarChar(100)
+  join_date                 DateTime?                  @db.Date
+  leave_date                DateTime?                  @db.Date
+  oib                       String?                    @db.VarChar(11)
+  college                   String?                    @db.VarChar(100)
+  college_confirmation      Boolean
+  gender                    String?                    @db.VarChar(255)
+  membership_paid           Boolean
+  members_address           members_address[]
+  members_resetpasswordlink members_resetpasswordlink?
+}
+
+model members_membergrouplink {
+  id            Int           @id @default(autoincrement())
+  member_id     Int
+  group_id      Int
+  date_start    DateTime?     @db.Date
+  date_end      DateTime?     @db.Date
+  card_number   String?       @db.VarChar(10)
+  members_group members_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([group_id], map: "members_membergrouplink_group_id")
+  @@index([member_id], map: "members_membergrouplink_member_id")
+}
+
+model members_resetpasswordlink {
+  id             Int            @id @default(autoincrement())
+  member_id      Int            @unique
+  unique_link    String         @unique @db.VarChar(255)
+  created_at     DateTime       @db.Timestamptz(6)
+  members_member members_member @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_id_refs_id_3304e2d0")
+
+  @@index([unique_link], map: "members_resetpasswordlink_unique_link_like")
+}
+
+model news_news {
+  id          Int       @id @default(autoincrement())
+  subject     String    @db.VarChar(192)
+  description String?
+  content     String?
+  created_at  DateTime  @db.Timestamptz(6)
+  thumb       String?   @db.VarChar(255)
+  slug        String?   @db.VarChar(128)
+  sticky      Boolean?  @default(false)
+  expire_at   DateTime? @db.Timestamp(6)
+}
+
+model newsletter_subscription {
+  id    Int    @id @default(autoincrement())
+  email String @unique @db.VarChar(75)
+}
+
+model savjet_dezurstva {
+  id      Int      @id @default(autoincrement())
+  start   DateTime @db.Date
+  end     DateTime @db.Date
+  content String
+}
+
+model savjet_zapisnik {
+  id        Int        @id @default(autoincrement())
+  author_id Int?
+  date      DateTime   @db.Timestamptz(6)
+  title     String     @db.VarChar(100)
+  content   String?
+  auth_user auth_user? @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_id_refs_id_25a8e88d")
+
+  @@index([author_id], map: "savjet_zapisnik_author_id")
+}
+
+model south_migrationhistory {
+  id        Int      @id @default(autoincrement())
+  app_name  String   @db.VarChar(255)
+  migration String   @db.VarChar(255)
+  applied   DateTime @db.Timestamptz(6)
+}
+
+model tagging_tag {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique @db.VarChar(50)
+  tagging_taggeditem tagging_taggeditem[]
+}
+
+model tagging_taggeditem {
+  id                  Int                 @id @default(autoincrement())
+  tag_id              Int
+  content_type_id     Int
+  object_id           Int
+  django_content_type django_content_type @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tagging_tag         tagging_tag         @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([tag_id, content_type_id, object_id], map: "tagging_taggeditem_tag_id_key")
+  @@index([content_type_id], map: "tagging_taggeditem_content_type_id")
+  @@index([object_id], map: "tagging_taggeditem_object_id")
+  @@index([tag_id], map: "tagging_taggeditem_tag_id")
+}
+
+model thumbnail_kvstore {
+  key   String @id @db.VarChar(200)
+  value String
+
+  @@index([key], map: "thumbnail_kvstore_key_like")
 }

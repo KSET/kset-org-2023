@@ -1,0 +1,18 @@
+.container {
+  $spacing: 0.5rem;
+
+  > {
+    :not([hidden]) {
+      @apply px-3;
+      border-color: inherit;
+
+      &:first-child {
+        @apply pl-0;
+      }
+
+      &:last-child {
+        @apply pr-0;
+      }
+    }
+  }
+}

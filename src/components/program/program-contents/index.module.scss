@@ -1,0 +1,8 @@
+.container {
+  line-height: 140%;
+  letter-spacing: 0.04445em;
+
+  > p + p {
+    margin-top: 1em;
+  }
+}
