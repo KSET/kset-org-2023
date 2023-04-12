@@ -14,6 +14,51 @@ const config = {
 
   compress: false,
 
+  async redirects() {
+    return await Promise.resolve([
+      {
+        source: "/arhiva/dogadaji",
+        destination: "/program",
+        permanent: false,
+      },
+      {
+        source: "/dogadaj/:slug",
+        destination: "/program/:slug",
+        permanent: false,
+      },
+      {
+        source: "/arhiva/vijesti",
+        destination: "/news",
+        permanent: false,
+      },
+      {
+        source: "/vijest/:slug",
+        destination: "/news/:slug",
+        permanent: false,
+      },
+      {
+        source: "/club",
+        destination: "/about",
+        permanent: false,
+      },
+      {
+        source: "/club/divisions",
+        destination: "/divisions",
+        permanent: false,
+      },
+      {
+        source: "/club/multimedia",
+        destination: "/multimedia",
+        permanent: false,
+      },
+      {
+        source: "/kontakt",
+        destination: "/contact",
+        permanent: false,
+      },
+    ]);
+  },
+
   devIndicators: {
     buildActivity: true,
     buildActivityPosition: "bottom-left",

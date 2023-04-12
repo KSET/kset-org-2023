@@ -1,4 +1,4 @@
-:80, kset.loc:80 {
+:80, www.kset.loc:80, kset.loc:80 {
 	reverse_proxy localhost:3000
 	header -Server
 	header -X-Powered-By

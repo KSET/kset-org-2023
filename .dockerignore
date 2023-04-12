@@ -21,12 +21,17 @@ next-env.d.ts
 # production
 /build
 .env
+.env.example
 
 # misc
 .DS_Store
 *.pem
 .git
 .gitignore
+Caddyfile
+mprocs.yaml
+README.md
+LICENSE
 
 # debug
 npm-debug.log*
