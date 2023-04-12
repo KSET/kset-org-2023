@@ -9,7 +9,8 @@ import {
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
+    .query(async ({ input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       return {
         greeting: `Server says: Hello ${input.text}`,
       };

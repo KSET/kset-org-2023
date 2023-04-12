@@ -33,6 +33,8 @@ const config = {
     "plugin:@typescript-eslint/strict",
   ],
   rules: {
+    "@next/next/no-img-element": "off",
+
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {

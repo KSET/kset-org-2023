@@ -14,6 +14,10 @@ const config = {
 
   compress: false,
 
+  images: {
+    domains: ["localhost", "kset.org", "www.kset.org"],
+  },
+
   async redirects() {
     return await Promise.resolve([
       {
@@ -61,12 +65,12 @@ const config = {
 
   devIndicators: {
     buildActivity: true,
-    buildActivityPosition: "bottom-left",
+    buildActivityPosition: "bottom-right",
   },
 
-  i18n: {
-    defaultLocale: "hr",
-    locales: ["hr"],
-  }
+  experimental: {
+    appDir: true,
+    adjustFontFallbacks: true,
+  },
 };
 export default config;

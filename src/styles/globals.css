@@ -1,7 +1,11 @@
-#__next {
-  @apply flex-1;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#__next {
+  @apply flex flex-1 flex-col;
+}
+
+main a {
+  @apply text-primary underline hover:no-underline;
+}
