@@ -63,7 +63,7 @@ const PageIndex: NextPage = () => {
         <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
           Nadolazeći događaji
         </h2>
-        <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 divide-x overflow-y-hidden border-x border-white/20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 divide-x overflow-y-hidden border-x border-white/20 sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
           {upcomingEvents.map((event) => (
             <EventItem key={event.id} item={event} />
           ))}

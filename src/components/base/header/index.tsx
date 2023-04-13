@@ -78,7 +78,7 @@ export const BaseHeader: FC = () => {
   );
 
   return (
-    <header className="relative mb-6 mt-6 flex h-6 transition-[height,margin] lg:mb-14 lg:mt-12 lg:h-8">
+    <header className="relative mb-6 mt-6 flex h-6 transition-[height,margin] br:mb-14 br:mt-12 br:h-8">
       <Link href="/">
         <Image
           src={KsetLogo}
@@ -89,7 +89,7 @@ export const BaseHeader: FC = () => {
         />
       </Link>
       <nav className="ml-auto px-4">
-        <div className="flex h-full lg:hidden">
+        <div className="flex h-full br:hidden">
           <Drawer.Drawer>
             <Drawer.Trigger>
               <button className="aspect-square h-full w-full flex-1 opacity-80 transition-opacity hover:opacity-100">
@@ -128,7 +128,7 @@ export const BaseHeader: FC = () => {
             </Drawer.Target>
           </Drawer.Drawer>
         </div>
-        <ul className="hidden gap-7 lg:flex">
+        <ul className="hidden gap-7 br:flex">
           {headerItems.map((item) => (
             <li
               className={cn(
