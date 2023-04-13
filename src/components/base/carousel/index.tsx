@@ -1,6 +1,8 @@
 import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react";
 import {
   type FC,
+  type HTMLProps,
+  type MouseEventHandler,
   type PropsWithChildren,
   useCallback,
   useEffect,
@@ -13,29 +15,54 @@ import {
 } from "react-icons/ri";
 
 import { type Dict } from "~/types/object";
+import { cn } from "~/utils/class";
 
 const CarouselItem: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div
-      className="min-w-0 flex-shrink-0 flex-grow-0"
-      style={{
-        flexBasis: "var(--slide-size, 100%)",
-      }}
-    >
+    <div className="min-w-0 flex-shrink-0 flex-grow-0 basis-[var(--slide-size-override,var(--slide-size,100%))]">
       {children}
+    </div>
+  );
+};
+
+const CarouselArrow: FC<{
+  enabled: boolean;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  direction: "left" | "right";
+}> = ({ enabled, onClick, direction }) => {
+  const Icon = direction === "left" ? IconChevronLeft : IconChevronRight;
+  const label = direction === "left" ? "Previous" : "Next";
+
+  return (
+    <div className="self-center justify-self-center">
+      <button
+        disabled={!enabled}
+        className={cn(
+          "block transform transition-transform disabled:grayscale",
+          direction === "left"
+            ? "hover:-translate-x-0.5"
+            : "hover:translate-x-0.5",
+        )}
+        onClick={onClick}
+        role="button"
+        aria-label={label}
+      >
+        <Icon className="h-10 w-10 text-primary" />
+      </button>
     </div>
   );
 };
 
 export const Carousel: FC<
   PropsWithChildren<
-    EmblaOptionsType & {
+    HTMLProps<HTMLDivElement> & {
       displayed?: number;
+      options?: EmblaOptionsType;
     }
   >
 > & {
   Item: typeof CarouselItem;
-} = ({ children, displayed, ...emblaOptions }) => {
+} = ({ children, displayed, options: emblaOptions, ...divProps }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "center",
@@ -66,18 +93,18 @@ export const Carousel: FC<
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="grid grid-cols-[2em_minmax(0,1fr)_2em]">
-      <div className="self-center justify-self-center">
-        <button
-          disabled={!prevBtnEnabled}
-          className="block transform transition-transform hover:-translate-x-0.5 disabled:grayscale"
-          onClick={scrollPrev}
-          role="button"
-          aria-label="Previous image"
-        >
-          <IconChevronLeft className="text-primary" size="1.5rem" />
-        </button>
-      </div>
+    <div
+      {...divProps}
+      className={cn(
+        "grid grid-cols-[2em_minmax(0,1fr)_2em]",
+        divProps.className,
+      )}
+    >
+      <CarouselArrow
+        enabled={prevBtnEnabled}
+        onClick={scrollPrev}
+        direction="left"
+      />
       <div ref={emblaRef} className="overflow-clip">
         <div
           className="flex"
@@ -90,17 +117,11 @@ export const Carousel: FC<
           {children}
         </div>
       </div>
-      <div className="self-center justify-self-center">
-        <button
-          disabled={!nextBtnEnabled}
-          className="block transform transition-transform hover:translate-x-0.5 disabled:grayscale"
-          onClick={scrollNext}
-          role="button"
-          aria-label="Next image"
-        >
-          <IconChevronRight className="text-primary" size="1.5rem" />
-        </button>
-      </div>
+      <CarouselArrow
+        enabled={nextBtnEnabled}
+        onClick={scrollNext}
+        direction="right"
+      />
     </div>
   );
 };
