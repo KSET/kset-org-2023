@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type FC } from "react";
+import { RiArrowRightSLine as IconChevronRight } from "react-icons/ri";
 
 import KsetLogo from "~/assets/common/kset-logo.png";
 import { cn } from "~/utils/class";
-
-import $style from "./index.module.scss";
 
 export const BaseFooter: FC = () => {
   return (
@@ -36,14 +35,17 @@ export const BaseFooter: FC = () => {
             </ul>
           </div>
           <div>
-            <ul className={cn("space-y-4 leading-none", $style.footerList)}>
-              <li>
+            <ul className={cn("space-y-4 leading-none")}>
+              <li className="flex uppercase">
+                <IconChevronRight className="mr-1 text-primary" />
                 <a href="https://www.facebook.com/KSETZg">Facebook</a>
               </li>
-              <li>
+              <li className="flex uppercase">
+                <IconChevronRight className="mr-1 text-primary" />
                 <a href="https://www.instagram.com/klubkset">Instagram</a>
               </li>
-              <li>
+              <li className="flex uppercase">
+                <IconChevronRight className="mr-1 text-primary" />
                 <a href="https://www.youtube.com/user/KsetVideo">YouTube</a>
               </li>
             </ul>

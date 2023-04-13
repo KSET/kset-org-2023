@@ -1,9 +1,0 @@
-.footerList {
-  > li {
-    @apply flex uppercase;
-
-    &::before {
-      @apply mr-[0.75ch] self-center font-mono text-[0.85em] text-primary content-[">"];
-    }
-  }
-}
