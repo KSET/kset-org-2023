@@ -1,4 +1,3 @@
-import { Carousel } from "@mantine/carousel";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import {
   type GetServerSidePropsContext,
@@ -157,32 +156,6 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                   <a href="#">{event.gallery.gallery_photographer.name}</a>
                 </p>
               ) : null}
-              <div className="mt-6">
-                <Carousel
-                  withIndicators
-                  height={350}
-                  slideSize="25%"
-                  loop
-                  align="start"
-                >
-                  {event.gallery.gallery_image_album.map(
-                    ({ gallery_image: image }) => {
-                      return (
-                        <Carousel.Slide key={image.id}>
-                          <img
-                            className="h-full w-full object-cover"
-                            alt={image.title}
-                            src={src(image.upload_path)}
-                          />
-                        </Carousel.Slide>
-                      );
-                    },
-                  )}
-                </Carousel>
-              </div>
-              <pre className="whitespace-pre-wrap">
-                {JSON.stringify(event.gallery, null, 2)}
-              </pre>
             </div>
           </div>
         ) : null}

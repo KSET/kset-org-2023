@@ -1,7 +1,6 @@
 import "~/styles/globals.css";
 import "~/styles/nprogress.scss";
 
-import { MantineProvider } from "@mantine/core";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type AppContext, type AppType } from "next/app";
 import NextApp from "next/app";
@@ -15,7 +14,7 @@ import UniversalCookie from "universal-cookie";
 import { useLoadingProgress } from "~/hooks/loading-progress";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
-import { fontMono, fontUi } from "~/utils/font";
+import { fontUi } from "~/utils/font";
 import { api } from "~/utils/queryApi";
 
 const getInitialProps = async (app: AppContext) => {
@@ -71,28 +70,13 @@ const MyApp: AppType<{
       />
       <CookiesProvider cookies={cookies}>
         <SessionProvider session={session}>
-          <MantineProvider
-            withGlobalStyles
-            withNormalizeCSS
-            withCSSVariables
-            theme={{
-              colorScheme: "dark",
-              fontFamily: fontUi.style.fontFamily,
-              fontFamilyMonospace: fontMono.style.fontFamily,
-              black: "#1a1a1a",
-              colors: { orange: ["#ff8c00"] },
-              primaryColor: "orange",
-              white: "#fff",
-            }}
-          >
-            {getLayout ? (
-              getLayout(<Component {...pageProps} />)
-            ) : (
-              <MainLayout className={fontUi.className}>
-                <Component {...pageProps} />
-              </MainLayout>
-            )}
-          </MantineProvider>
+          {getLayout ? (
+            getLayout(<Component {...pageProps} />)
+          ) : (
+            <MainLayout className={fontUi.className}>
+              <Component {...pageProps} />
+            </MainLayout>
+          )}
           <ReactQueryDevtools />
         </SessionProvider>
       </CookiesProvider>
