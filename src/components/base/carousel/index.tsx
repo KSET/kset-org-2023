@@ -1,5 +1,5 @@
 import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react";
-import { type FC, type PropsWithChildren, useEffect } from "react";
+import { type FC, type PropsWithChildren } from "react";
 import {
   RiArrowLeftSLine as IconChevronLeft,
   RiArrowRightSLine as IconChevronRight,
@@ -35,10 +35,6 @@ export const Carousel: FC<
     ...emblaOptions,
   });
   const slideSize = 100 / (displayed ?? 1);
-
-  useEffect(() => {
-    console.log(emblaApi);
-  }, [emblaApi]);
 
   return (
     <div className="grid grid-cols-[2em_minmax(0,1fr)_2em]">
