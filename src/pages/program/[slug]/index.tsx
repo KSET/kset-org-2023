@@ -6,6 +6,7 @@ import {
 import Image from "next/image";
 import { NextSeo } from "next-seo";
 
+import { Carousel } from "~/components/base/carousel";
 import { ProgramContents } from "~/components/program/program-contents";
 import { SeparatedItems } from "~/components/util/separated-items";
 import { MainLayout } from "~/layouts/main";
@@ -156,6 +157,29 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                   <a href="#">{event.gallery.gallery_photographer.name}</a>
                 </p>
               ) : null}
+              <div className="mt-6">
+                <div className="overflow-hidden">
+                  <Carousel displayed={3}>
+                    {event.gallery.gallery_image_album.map(
+                      ({ gallery_image: image }) => {
+                        return (
+                          <Carousel.Item key={image.id}>
+                            <AspectRatio ratio={1.2}>
+                              <img
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-full object-cover"
+                                alt={image.title}
+                                src={src(image.upload_path)}
+                              />
+                            </AspectRatio>
+                          </Carousel.Item>
+                        );
+                      },
+                    )}
+                  </Carousel>
+                </div>
+              </div>
             </div>
           </div>
         ) : null}
