@@ -1,5 +1,12 @@
 import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react";
-import { type FC, type PropsWithChildren } from "react";
+import {
+  type FC,
+  type PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   RiArrowLeftSLine as IconChevronLeft,
   RiArrowRightSLine as IconChevronRight,
@@ -34,17 +41,37 @@ export const Carousel: FC<
     align: "center",
     ...emblaOptions,
   });
-  const slideSize = 100 / (displayed ?? 1);
+  const slideSize = useMemo(() => 100 / (displayed ?? 1), [displayed]);
+  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
+
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) {
+      return;
+    }
+    setPrevBtnEnabled(emblaApi.canScrollPrev());
+    setNextBtnEnabled(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) {
+      return;
+    }
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
     <div className="grid grid-cols-[2em_minmax(0,1fr)_2em]">
       <div className="self-center justify-self-center">
         <button
-          disabled={!emblaApi?.canScrollPrev()}
+          disabled={!prevBtnEnabled}
           className="block transform transition-transform hover:-translate-x-0.5 disabled:grayscale"
-          onClick={() => {
-            emblaApi?.scrollPrev();
-          }}
+          onClick={scrollPrev}
           role="button"
           aria-label="Previous image"
         >
@@ -65,11 +92,9 @@ export const Carousel: FC<
       </div>
       <div className="self-center justify-self-center">
         <button
-          disabled={!emblaApi?.canScrollNext()}
+          disabled={!nextBtnEnabled}
           className="block transform transition-transform hover:translate-x-0.5 disabled:grayscale"
-          onClick={() => {
-            emblaApi?.scrollNext();
-          }}
+          onClick={scrollNext}
           role="button"
           aria-label="Next image"
         >
