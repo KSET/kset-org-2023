@@ -52,7 +52,7 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
 
   const date = new Date(event.date);
   const time = event.time ? new Date(event.time) : null;
-  const thumbSrc = src(event.thumb!);
+  const thumbSrc = src(event.thumb);
 
   return (
     <>
@@ -79,26 +79,29 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
         }
       />
       <article className="bg-white text-black">
-        <div className="container">
-          <div className="float-left w-2/3 pr-10">
-            <AspectRatio
-              ratio={3 / 2}
-              className="bg-center object-cover"
-              style={{
-                backgroundImage: `url(${thumbSrc})`,
-              }}
-            >
-              <Image
-                className="object-contain backdrop-blur-lg backdrop-saturate-150"
-                fill
-                alt={event.title}
-                src={thumbSrc}
-              />
-            </AspectRatio>
+        {thumbSrc ? (
+          <div className="br:container">
+            <div className="float-left w-full br:w-2/3 br:pr-10">
+              <AspectRatio
+                ratio={3 / 2}
+                className="bg-center object-cover"
+                style={{
+                  backgroundImage: `url(${thumbSrc})`,
+                }}
+              >
+                <Image
+                  className="object-contain backdrop-blur-lg backdrop-saturate-150"
+                  fill
+                  sizes="100vw"
+                  alt={event.title}
+                  src={thumbSrc}
+                />
+              </AspectRatio>
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <div className="bg-off-black pb-10 text-white">
+        <div className="clear-both w-full bg-off-black py-4 text-white br:float-none br:clear-none br:mb-0 br:w-auto br:pt-0">
           <div className="container">
             <time dateTime={event.date}>
               {date.toLocaleDateString("hr-HR", {
@@ -138,10 +141,8 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
           </div>
         </div>
 
-        <div aria-hidden="true" className="clear-both" />
-
         <ProgramContents
-          className="mx-auto max-w-[55vw] pb-14 pt-10 text-lg"
+          className="container clear-both mx-auto pb-14 pt-10 max-br:clear-both br:max-w-[55vw] br:px-0 br:text-lg"
           html={event.content}
         />
 
@@ -159,7 +160,10 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
               ) : null}
               <div className="mt-6">
                 <div className="overflow-hidden">
-                  <Carousel displayed={3}>
+                  <Carousel
+                    displayed={3}
+                    className="max-br:[--slide-size-override:100%]"
+                  >
                     {event.gallery.gallery_image_album.map(
                       ({ gallery_image: image }) => {
                         return (
