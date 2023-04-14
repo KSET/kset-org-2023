@@ -3,14 +3,17 @@ import {
   type GetServerSidePropsContext,
   type InferGetServerSidePropsType,
 } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { NextSeo } from "next-seo";
+import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 
 import { Carousel } from "~/components/base/carousel";
+import VariantImage from "~/components/base/image/variant-image";
 import { ProgramContents } from "~/components/program/program-contents";
 import { SeparatedItems } from "~/components/util/separated-items";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
+import { src } from "~/utils/kset-image";
 import { createApi } from "~/utils/serverApi";
 
 export const getServerSideProps = async (
@@ -32,21 +35,6 @@ export const getServerSideProps = async (
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-const src = <
-  TSrc extends string | null | undefined,
-  TRet extends TSrc extends string
-    ? `https://www.kset.org/media/${TSrc}`
-    : null,
->(
-  src: TSrc,
-): TRet => {
-  if (!src) {
-    return null as TRet;
-  }
-
-  return `https://www.kset.org/media/${src}` as TRet;
-};
 
 const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
   if (!event) {
@@ -81,25 +69,29 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
             : undefined
         }
       />
+      <div className="container mb-6">
+        <Link
+          href={{
+            pathname: "/program",
+            query: {
+              year: date.getFullYear(),
+            },
+            hash: `#event_${event.slug!}`,
+          }}
+          className="flex items-center gap-1 font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0"
+        >
+          <IconArrowLeft /> Povratak
+        </Link>
+      </div>
       <article className="bg-white text-black">
         {thumbSrc ? (
           <div className="br:container">
             <div className="float-left w-full br:w-2/3 br:pr-10">
-              <AspectRatio
-                ratio={3 / 2}
-                className="bg-center object-cover"
-                style={{
-                  backgroundImage: `url(${thumbSrc})`,
-                }}
-              >
-                <Image
-                  className="object-contain backdrop-blur-lg backdrop-saturate-150"
-                  fill
-                  sizes="100vw"
-                  alt={event.title}
-                  src={thumbSrc}
-                />
-              </AspectRatio>
+              <VariantImage
+                src={thumbSrc}
+                alt={event.title}
+                aspectRatio={3 / 2}
+              />
             </div>
           </div>
         ) : null}
