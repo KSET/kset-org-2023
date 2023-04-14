@@ -1,14 +1,11 @@
-import {
-  type GetServerSidePropsContext,
-  type InferGetServerSidePropsType,
-  type NextPage,
-} from "next";
+import { type GetServerSidePropsContext, type NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import VariantImage from "~/components/base/image/variant-image";
+import { type ServerSideProps } from "~/types/server";
 import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
 
@@ -32,10 +29,6 @@ export const getServerSideProps = async (
     },
   };
 };
-
-type ServerSideProps<T extends (args: any) => any> = Partial<
-  InferGetServerSidePropsType<T>
->;
 
 type Props = ServerSideProps<typeof getServerSideProps>;
 

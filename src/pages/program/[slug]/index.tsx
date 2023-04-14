@@ -1,8 +1,5 @@
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import {
-  type GetServerSidePropsContext,
-  type InferGetServerSidePropsType,
-} from "next";
+import { type GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
@@ -13,6 +10,7 @@ import { ProgramContents } from "~/components/program/program-contents";
 import { SeparatedItems } from "~/components/util/separated-items";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
+import { type ServerSideProps } from "~/types/server";
 import { src } from "~/utils/kset-image";
 import { createApi } from "~/utils/serverApi";
 
@@ -34,7 +32,7 @@ export const getServerSideProps = async (
   };
 };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+type Props = ServerSideProps<typeof getServerSideProps>;
 
 const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
   if (!event) {
