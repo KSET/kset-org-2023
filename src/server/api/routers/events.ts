@@ -71,15 +71,20 @@ export const eventsRouter = createTRPCRouter({
         /* eslint-enable camelcase */
       }
 
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      const description = htmlToText(event.description || event.content || "", {
+        wordwrap: false,
+      })
+        // Replace multiple whitespace (space, newline, etc.) with a single space
+        .replace(/\s+/g, " ")
+        // Trim string to 200 characters and add ellipsis
+        .replace(/^(.{200}[^\s]*).*/, "$1…");
+
       return {
         ...event,
         date: event.date.toISOString(),
         time: event.time?.toISOString(),
-        description: event.description
-          ? htmlToText(event.description, {
-              wordwrap: false,
-            })
-          : undefined,
+        description,
         gallery,
       };
     }),
