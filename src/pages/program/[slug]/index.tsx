@@ -16,9 +16,12 @@ import { createApi } from "~/utils/serverApi";
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
-  const api = await createApi(context);
+  const helpers = await createApi(context);
   const slug = context.params!.slug! as string;
-  const event = await api.events.getEventInfo({ slug, withImages: true });
+  const event = await helpers.events.getEventInfo.fetch({
+    slug,
+    withImages: true,
+  });
 
   return {
     notFound: !event,
