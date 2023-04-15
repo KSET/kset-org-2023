@@ -1,5 +1,4 @@
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import Image from "next/image";
 import { type FC } from "react";
 
 import { src as imgSrc, urlVariants } from "~/utils/kset-image";
@@ -23,12 +22,12 @@ const VariantImage: FC<{
         backgroundImage: urlVariants(src),
       }}
     >
-      <Image
-        className="object-contain backdrop-blur-lg backdrop-saturate-150"
-        fill
-        sizes="100vw"
+      <img
+        className="h-full w-full object-contain backdrop-blur-lg backdrop-saturate-150"
         alt={alt}
         src={src}
+        decoding="async"
+        loading="lazy"
       />
     </AspectRatio>
   );
