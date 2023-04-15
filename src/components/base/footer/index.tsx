@@ -8,7 +8,7 @@ import { cn } from "~/utils/class";
 
 export const BaseFooter: FC = () => {
   return (
-    <footer className="mt-auto overflow-hidden bg-secondary">
+    <footer className="pb-safe mt-auto overflow-hidden bg-secondary">
       <div className="container flex flex-wrap-reverse gap-8 pb-20 pt-8 max-br:pb-8">
         <div className="flex-auto">
           <Link href="/">
