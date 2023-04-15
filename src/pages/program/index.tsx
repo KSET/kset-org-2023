@@ -2,9 +2,10 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 
 import VariantImage from "~/components/base/image/variant-image";
+import LoadingArea from "~/components/base/loading";
 import { type ServerSideProps } from "~/types/server";
 import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
@@ -43,30 +44,17 @@ const EventDateFormatter = new Intl.DateTimeFormat("hr-HR", {
   year: "numeric",
 });
 
-const PageProgramHome: NextPage<Props> = ({ year }) => {
-  const router = useRouter();
-  const [selectedYear, setSelectedYear] = useState(
-    year ?? new Date().getFullYear(),
+const EventList: FC<{
+  year: number;
+}> = ({ year }) => {
+  const [data] = api.events.getEventsForYear.useSuspenseQuery(
+    {
+      year,
+    },
+    {
+      staleTime: 5 * 60 * 1000,
+    },
   );
-
-  const [eventYears] = api.events.getYearsWithEvents.useSuspenseQuery();
-  const [data, dataQuery] = api.events.getEventsForYear.useSuspenseQuery({
-    year: selectedYear,
-  });
-
-  useEffect(() => {
-    if (router.query.year === String(selectedYear)) {
-      return;
-    }
-
-    void router.replace({
-      query: {
-        ...router.query,
-        year: selectedYear,
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedYear]);
 
   const entriesByMonth = Object.entries(data.groupedByMonth).sort(
     ([lt], [gt]) => Number(gt) - Number(lt),
@@ -75,23 +63,7 @@ const PageProgramHome: NextPage<Props> = ({ year }) => {
   return (
     <>
       <NextSeo title={`Program ${data.forYear}`} />
-      <div className="flex w-full items-center bg-[#28282D] p-4 pb-7">
-        <select
-          className="bg-black text-white"
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          defaultValue={selectedYear}
-        >
-          {eventYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div
-        className="mt-20 flex flex-col gap-10 overflow-hidden br:gap-4"
-        data-loading={dataQuery.isFetching}
-      >
+      <div className="flex flex-col gap-10 overflow-hidden br:gap-4">
         {entriesByMonth.map(([month, events]) => (
           <div
             key={month}
@@ -150,6 +122,59 @@ const PageProgramHome: NextPage<Props> = ({ year }) => {
           </div>
         ))}
       </div>
+    </>
+  );
+};
+
+const PageProgramHome: NextPage<Props> = ({ year }) => {
+  const router = useRouter();
+  const [selectedYear, setSelectedYear] = useState(
+    year ?? new Date().getFullYear(),
+  );
+
+  const [eventYears] = api.events.getYearsWithEvents.useSuspenseQuery();
+
+  useEffect(() => {
+    if (router.query.year === String(selectedYear)) {
+      return;
+    }
+
+    void router.replace(
+      {
+        query: {
+          ...router.query,
+          year: selectedYear,
+        },
+      },
+      undefined,
+      {
+        shallow: true,
+        scroll: false,
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYear]);
+
+  return (
+    <>
+      <div className="flex w-full items-center bg-[#28282D] p-4 pb-7">
+        <select
+          className="bg-black text-white"
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          defaultValue={selectedYear}
+        >
+          <option disabled>Odaberi interval</option>
+          {eventYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="h-20" role="none" />
+      <LoadingArea position="top right">
+        <EventList year={selectedYear} />
+      </LoadingArea>
     </>
   );
 };
