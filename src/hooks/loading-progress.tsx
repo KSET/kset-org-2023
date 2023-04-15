@@ -1,7 +1,7 @@
 import { useIsFetching } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 export const useLoadingProgress = ({
   onStart,
@@ -12,6 +12,8 @@ export const useLoadingProgress = ({
   });
   const router = useRouter();
   const routerEvents = router.events as typeof router.events | undefined;
+
+  type RouterEvents = Parameters<NonNullable<typeof routerEvents>["on"]>[0];
 
   const loaderStart = useCallback(() => {
     if (NProgress.isStarted()) {
@@ -34,17 +36,33 @@ export const useLoadingProgress = ({
     });
   }, []);
 
+  const routerEventHandlers: [() => void, RouterEvents[]][] = useMemo(
+    () => [
+      [loaderStart, ["routeChangeStart"]],
+      [loaderDone, ["routeChangeComplete", "routeChangeError"]],
+    ],
+    [loaderStart, loaderDone],
+  );
+
   useEffect(() => {
-    routerEvents?.on("routeChangeStart", loaderStart);
-    routerEvents?.on("routeChangeComplete", loaderDone);
-    routerEvents?.on("routeChangeError", loaderDone);
+    if (!routerEvents) {
+      return;
+    }
+
+    for (const [handler, events] of routerEventHandlers) {
+      for (const event of events) {
+        routerEvents.on(event, handler);
+      }
+    }
 
     return () => {
-      routerEvents?.off("routeChangeStart", loaderStart);
-      routerEvents?.off("routeChangeComplete", loaderDone);
-      routerEvents?.off("routeChangeError", loaderDone);
+      for (const [handler, events] of routerEventHandlers) {
+        for (const event of events) {
+          routerEvents.off(event, handler);
+        }
+      }
     };
-  }, [loaderStart, loaderDone, routerEvents]);
+  }, [loaderStart, loaderDone, routerEvents, routerEventHandlers]);
 
   useEffect(() => {
     if (isFetching > 0) {
