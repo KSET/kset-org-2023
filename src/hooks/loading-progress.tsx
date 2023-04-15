@@ -37,10 +37,12 @@ export const useLoadingProgress = ({
   useEffect(() => {
     routerEvents?.on("routeChangeStart", loaderStart);
     routerEvents?.on("routeChangeComplete", loaderDone);
+    routerEvents?.on("routeChangeError", loaderDone);
 
     return () => {
       routerEvents?.off("routeChangeStart", loaderStart);
       routerEvents?.off("routeChangeComplete", loaderDone);
+      routerEvents?.off("routeChangeError", loaderDone);
     };
   }, [loaderStart, loaderDone, routerEvents]);
 
