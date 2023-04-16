@@ -36,7 +36,9 @@ const CarouselArrow: FC<{
   return (
     <div className="self-center justify-self-center">
       <button
+        aria-label={label}
         disabled={!enabled}
+        role="button"
         className={cn(
           "block transform transition-transform disabled:grayscale",
           direction === "left"
@@ -44,8 +46,6 @@ const CarouselArrow: FC<{
             : "hover:translate-x-0.5",
         )}
         onClick={onClick}
-        role="button"
-        aria-label={label}
       >
         <Icon className="h-10 w-10 text-primary" />
       </button>
@@ -101,9 +101,9 @@ export const Carousel: FC<
       )}
     >
       <CarouselArrow
+        direction="left"
         enabled={prevBtnEnabled}
         onClick={scrollPrev}
-        direction="left"
       />
       <div ref={emblaRef} className="overflow-clip">
         <div
@@ -118,9 +118,9 @@ export const Carousel: FC<
         </div>
       </div>
       <CarouselArrow
+        direction="right"
         enabled={nextBtnEnabled}
         onClick={scrollNext}
-        direction="right"
       />
     </div>
   );

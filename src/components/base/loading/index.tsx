@@ -29,13 +29,13 @@ const LoadingSpinner: FC<
   return (
     <div
       {...props}
+      style={style}
       className={cn(
         "h-8 w-8 animate-spin rounded-full border-4 border-transparent border-l-primary border-t-primary",
         props.className,
       )}
-      style={style}
     >
-      <div className="hidden" role="alert" aria-busy>
+      <div aria-busy className="hidden" role="alert">
         Loading
       </div>
     </div>

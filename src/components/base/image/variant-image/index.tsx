@@ -16,18 +16,18 @@ const VariantImage: FC<{
 
   return (
     <AspectRatio
-      ratio={aspectRatio}
       className="bg-cover bg-center bg-no-repeat object-cover"
+      ratio={aspectRatio}
       style={{
         backgroundImage: urlVariants(src),
       }}
     >
       <img
-        className="h-full w-full object-contain backdrop-blur-lg backdrop-saturate-150"
         alt={alt}
-        src={src}
+        className="h-full w-full object-contain backdrop-blur-lg backdrop-saturate-150"
         decoding="async"
         loading="lazy"
+        src={src}
       />
     </AspectRatio>
   );

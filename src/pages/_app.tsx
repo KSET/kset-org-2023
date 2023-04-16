@@ -40,24 +40,24 @@ const MyApp: AppType<{
     <>
       <Head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=Edge" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta content="IE=Edge" httpEquiv="X-UA-Compatible" />
         <meta
-          name="keywords"
           content="KSET, klub, studenti, fakultet, zagreb, elektrotehnika, računarstvo, hacker, volunteering, computing, electrical engineering, club, nightlife, university"
+          name="keywords"
         />
-        <meta property="og:latitude" content="45.80154" />
-        <meta property="og:longitude" content="15.97166" />
-        <meta property="og:street-address" content="Unska 3" />
-        <meta property="og:locality" content="Zagreb" />
-        <meta property="og:region" content="Zagreb" />
-        <meta property="og:postal-code" content="10000" />
-        <meta property="og:country-name" content="Croatia" />
+        <meta content="45.80154" property="og:latitude" />
+        <meta content="15.97166" property="og:longitude" />
+        <meta content="Unska 3" property="og:street-address" />
+        <meta content="Zagreb" property="og:locality" />
+        <meta content="Zagreb" property="og:region" />
+        <meta content="10000" property="og:postal-code" />
+        <meta content="Croatia" property="og:country-name" />
       </Head>
       <DefaultSeo
-        titleTemplate="KSET.org - %s"
-        title="Klub studenata elektrotehnike"
         description="Klub studenata elektrotehnike, poznatiji kao KSET je zagrebački klub i okupljalište studenata Fakulteta elektrotehnike i računarstva (FER)."
+        title="Klub studenata elektrotehnike"
+        titleTemplate="KSET.org - %s"
         openGraph={{
           type: "website",
           locale: "hr_HR",

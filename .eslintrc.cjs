@@ -73,6 +73,15 @@ const config = {
         namedComponents: "arrow-function",
       },
     ],
+    "react/jsx-sort-props": [
+      "error",
+      {
+        callbacksLast: true,
+        shorthandFirst: true,
+        multiline: "last",
+        reservedFirst: true,
+      },
+    ],
 
     "no-lone-blocks": "off",
     "camelcase": [

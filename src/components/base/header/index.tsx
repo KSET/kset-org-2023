@@ -18,7 +18,7 @@ const NavDrawerItem: FC<PropsWithChildren> = ({ children }) => {
   const closeButton = Drawer.useA11yCloseButton(ref);
 
   return (
-    <div className="contents" ref={ref} {...closeButton}>
+    <div ref={ref} className="contents" {...closeButton}>
       {children}
     </div>
   );
@@ -81,11 +81,11 @@ export const BaseHeader: FC = () => {
     <header className="relative mb-6 mt-6 flex h-6 transition-[height,margin] br:mb-14 br:mt-12 br:h-8">
       <Link href="/">
         <Image
-          src={KsetLogo}
-          alt="KSET Logo"
           priority
-          sizes="100vw"
+          alt="KSET Logo"
           className="h-full w-auto object-contain object-left"
+          sizes="100vw"
+          src={KsetLogo}
         />
       </Link>
       <nav className="ml-auto px-4">
@@ -97,7 +97,7 @@ export const BaseHeader: FC = () => {
               </button>
             </Drawer.Trigger>
 
-            <Drawer.Target preventScroll={true} closeOnEscape placement="right">
+            <Drawer.Target closeOnEscape placement="right" preventScroll={true}>
               <div className="z-50 h-[100vh] w-full overflow-y-auto overflow-x-hidden bg-off-black transition-all duration-300">
                 <div className="container pt-6">
                   <div className="flex p-6 pt-0">
@@ -111,11 +111,11 @@ export const BaseHeader: FC = () => {
                   <ul className="flex flex-col gap-7">
                     {headerItems.map((item) => (
                       <li
+                        key={item.text}
                         className={cn(
                           "relative flex pb-1 font-bold uppercase opacity-80 hover:opacity-100",
                           ifActive(item, $style.navLinkActive),
                         )}
-                        key={item.text}
                       >
                         <NavDrawerItem>
                           <Link href={item.href}>{item.text}</Link>
@@ -131,11 +131,11 @@ export const BaseHeader: FC = () => {
         <ul className="hidden gap-7 br:flex">
           {headerItems.map((item) => (
             <li
+              key={item.text}
               className={cn(
                 "relative flex pb-1 font-bold uppercase opacity-80 hover:opacity-100",
                 ifActive(item, $style.navLinkActive),
               )}
-              key={item.text}
             >
               <Link href={item.href}>{item.text}</Link>
             </li>

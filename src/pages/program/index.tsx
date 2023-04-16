@@ -79,19 +79,19 @@ const EventList: FC<{
                   <Link
                     key={event.id}
                     className="group/link scroll-mt-16 text-white no-underline"
+                    id={`event_${event.slug!}`}
                     href={{
                       pathname: "/program/[slug]",
                       query: {
                         slug: event.slug,
                       },
                     }}
-                    id={`event_${event.slug!}`}
                   >
                     <div className="grid grid-cols-1 gap-2 br:grid-cols-[theme(spacing.56)_auto] br:gap-10">
                       <VariantImage
-                        src={event.thumb}
                         alt={event.title}
                         aspectRatio={3 / 2}
+                        src={event.thumb}
                       />
                       <div className="flex flex-col tracking-[1.6px] br:py-6">
                         <time
@@ -160,8 +160,8 @@ const PageProgramHome: NextPage<Props> = ({ year }) => {
       <div className="flex w-full items-center bg-[#28282D] p-4 pb-7">
         <select
           className="bg-black text-white"
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
           defaultValue={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
         >
           <option disabled>Odaberi interval</option>
           {eventYears.map((year) => (

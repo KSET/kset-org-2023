@@ -13,11 +13,11 @@ export const BaseFooter: FC = () => {
         <div className="flex-auto">
           <Link href="/">
             <Image
-              src={KsetLogo}
-              alt="KSET Logo"
               priority
-              sizes="100vw"
+              alt="KSET Logo"
               className="h-8 w-auto object-contain object-left"
+              sizes="100vw"
+              src={KsetLogo}
             />
           </Link>
           <span className="text-xs tracking-widest opacity-80">

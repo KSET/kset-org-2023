@@ -69,6 +69,7 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
       />
       <div className="container mb-6">
         <Link
+          className="flex items-center gap-1 font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0"
           href={{
             pathname: "/program",
             query: {
@@ -76,7 +77,6 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
             },
             hash: `#event_${event.slug!}`,
           }}
-          className="flex items-center gap-1 font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0"
         >
           <IconArrowLeft /> Povratak
         </Link>
@@ -86,9 +86,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
           <div className="br:container">
             <div className="float-left w-full br:w-2/3 br:pr-10">
               <VariantImage
-                src={thumbSrc}
                 alt={event.title}
                 aspectRatio={3 / 2}
+                src={thumbSrc}
               />
             </div>
           </div>
@@ -122,9 +122,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
               {event.fbeventid ? (
                 <span>
                   <a
-                    target="_blank"
-                    rel="noopener noreferrer"
                     href={`https://www.facebook.com/events/${event.fbeventid}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Facebook
                   </a>
@@ -154,8 +154,8 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
               <div className="mt-6">
                 <div className="overflow-hidden">
                   <Carousel
-                    displayed={3}
                     className="max-br:[--slide-size-override:100%]"
+                    displayed={3}
                   >
                     {event.gallery.gallery_image_album.map(
                       ({ gallery_image: image }) => {
@@ -163,10 +163,10 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                           <Carousel.Item key={image.id}>
                             <AspectRatio ratio={1.2}>
                               <img
-                                loading="lazy"
-                                decoding="async"
-                                className="h-full w-full object-cover"
                                 alt={image.title}
+                                className="h-full w-full object-cover"
+                                decoding="async"
+                                loading="lazy"
                                 src={src(image.upload_path)}
                               />
                             </AspectRatio>
