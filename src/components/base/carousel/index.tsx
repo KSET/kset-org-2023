@@ -39,6 +39,7 @@ const CarouselArrow: FC<{
         aria-label={label}
         disabled={!enabled}
         role="button"
+        type="button"
         className={cn(
           "block transform transition-transform disabled:grayscale",
           direction === "left"

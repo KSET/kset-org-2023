@@ -92,17 +92,23 @@ export const BaseHeader: FC = () => {
         <div className="flex h-full br:hidden">
           <Drawer.Drawer>
             <Drawer.Trigger>
-              <button className="aspect-square h-full w-full flex-1 opacity-80 transition-opacity hover:opacity-100">
+              <button
+                className="aspect-square h-full w-full flex-1 opacity-80 transition-opacity hover:opacity-100"
+                type="button"
+              >
                 <IconBurger className="h-full w-full" />
               </button>
             </Drawer.Trigger>
 
-            <Drawer.Target closeOnEscape placement="right" preventScroll={true}>
+            <Drawer.Target closeOnEscape preventScroll placement="right">
               <div className="z-50 h-[100vh] w-full overflow-y-auto overflow-x-hidden bg-off-black transition-all duration-300">
                 <div className="container pt-6">
                   <div className="flex p-6 pt-0">
                     <Drawer.CloseButton>
-                      <button className="ml-auto h-6 scale-125 opacity-80 transition-opacity hover:opacity-100">
+                      <button
+                        className="ml-auto h-6 scale-125 opacity-80 transition-opacity hover:opacity-100"
+                        type="button"
+                      >
                         <IconClose className="h-full w-full" />
                       </button>
                     </Drawer.CloseButton>

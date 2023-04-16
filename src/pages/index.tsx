@@ -48,11 +48,7 @@ const EventItem: FC<HTMLProps<HTMLDivElement> & { item: TEventItem }> = ({
             />
           </>
         ) : null}
-        {item.price ? (
-          <>
-            <span>{item.price}</span>
-          </>
-        ) : null}
+        {item.price ? <span>{item.price}</span> : null}
       </div>
     </article>
   );

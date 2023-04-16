@@ -112,6 +112,10 @@ const withMargin = <TStyle extends CSSProperties>(
   return style;
 };
 
+const DefaultFallbackContainer: FC<PropsWithChildren> = ({ children }) => {
+  return <div className="h-32">{children}</div>;
+};
+
 const LoadingArea: FC<
   PropsWithChildren &
     HTMLProps<HTMLDivElement> & {
@@ -127,9 +131,7 @@ const LoadingArea: FC<
   ...props
 }) => {
   if (!FallbackContainer) {
-    FallbackContainer = function FallbackContainer({ children }) {
-      return <div className="h-32">{children}</div>;
-    };
+    FallbackContainer = DefaultFallbackContainer;
   }
 
   return (
