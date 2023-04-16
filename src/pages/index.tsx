@@ -1,16 +1,23 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { type FC } from "react";
+import { type FC, type HTMLProps } from "react";
 
 import ImageHero from "~/assets/page/index/hero.png";
+import { cn } from "~/utils/class";
 import { api, type RouterOutputs } from "~/utils/queryApi";
 
 type TEventItem = RouterOutputs["events"]["getUpcomingEvents"][number];
 
-const EventItem: FC<{ item: TEventItem }> = ({ item }) => {
+const EventItem: FC<HTMLProps<HTMLDivElement> & { item: TEventItem }> = ({
+  item,
+  ...props
+}) => {
   return (
-    <article className="flex flex-col border-inherit px-6">
+    <article
+      {...props}
+      className={cn("flex flex-col border-inherit px-6", props.className)}
+    >
       <time className="text-xs text-primary" dateTime={item.date.toISOString()}>
         {item.date.toLocaleDateString("hr-HR", {
           weekday: "long",
@@ -35,7 +42,10 @@ const EventItem: FC<{ item: TEventItem }> = ({ item }) => {
         {item.tags.length > 0 ? (
           <>
             <span>{item.tags.join(", ")}</span>
-            <hr className="mx-4 inline border-l border-primary/60" />
+            <div
+              role="none"
+              className="mx-4 inline border-l border-primary/60"
+            />
           </>
         ) : null}
         {item.price ? (
@@ -63,9 +73,9 @@ const PageIndex: NextPage = () => {
         <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
           Nadolazeći događaji
         </h2>
-        <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 divide-x overflow-y-hidden border-x border-white/20 sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
+        <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
           {upcomingEvents.map((event) => (
-            <EventItem key={event.id} item={event} />
+            <EventItem className="bg-off-black" key={event.id} item={event} />
           ))}
         </div>
       </section>
