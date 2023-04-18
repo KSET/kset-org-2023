@@ -14,10 +14,10 @@ export const ProgramContents: FC<
   return (
     <div
       {...attrs}
-      className={cn(attrs.className, $style.container)}
       dangerouslySetInnerHTML={{
         __html: html,
       }}
+      className={cn(attrs.className, $style.container)}
     />
   );
 };

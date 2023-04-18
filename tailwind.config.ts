@@ -18,6 +18,9 @@ export default {
         center: true,
         padding: "3rem",
       },
+      screens: {
+        br: "1024px",
+      },
     },
   },
   plugins: [],

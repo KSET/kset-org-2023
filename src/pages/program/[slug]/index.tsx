@@ -1,24 +1,28 @@
-import { Carousel } from "@mantine/carousel";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import {
-  type GetServerSidePropsContext,
-  type InferGetServerSidePropsType,
-} from "next";
-import Image from "next/image";
+import { type GetServerSidePropsContext } from "next";
+import Link from "next/link";
 import { NextSeo } from "next-seo";
+import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 
+import { Carousel } from "~/components/base/carousel";
+import VariantImage from "~/components/base/image/variant-image";
 import { ProgramContents } from "~/components/program/program-contents";
 import { SeparatedItems } from "~/components/util/separated-items";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
+import { type ServerSideProps } from "~/types/server";
+import { src } from "~/utils/kset-image";
 import { createApi } from "~/utils/serverApi";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
-  const api = await createApi(context);
+  const helpers = await createApi(context);
   const slug = context.params!.slug! as string;
-  const event = await api.events.getEventInfo({ slug, withImages: true });
+  const event = await helpers.events.getEventInfo.fetch({
+    slug,
+    withImages: true,
+  });
 
   return {
     notFound: !event,
@@ -28,22 +32,7 @@ export const getServerSideProps = async (
   };
 };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-const src = <
-  TSrc extends string | null | undefined,
-  TRet extends TSrc extends string
-    ? `https://www.kset.org/media/${TSrc}`
-    : null,
->(
-  src: TSrc,
-): TRet => {
-  if (!src) {
-    return null as TRet;
-  }
-
-  return `https://www.kset.org/media/${src}` as TRet;
-};
+type Props = ServerSideProps<typeof getServerSideProps>;
 
 const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
   if (!event) {
@@ -52,7 +41,7 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
 
   const date = new Date(event.date);
   const time = event.time ? new Date(event.time) : null;
-  const thumbSrc = src(event.thumb!);
+  const thumbSrc = src(event.thumb);
 
   return (
     <>
@@ -78,27 +67,34 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
             : undefined
         }
       />
+      <div className="container mb-6">
+        <Link
+          className="flex items-center gap-1 font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0"
+          href={{
+            pathname: "/program",
+            query: {
+              year: date.getFullYear(),
+            },
+            hash: `#event_${event.slug!}`,
+          }}
+        >
+          <IconArrowLeft /> Povratak
+        </Link>
+      </div>
       <article className="bg-white text-black">
-        <div className="container">
-          <div className="float-left w-2/3 pr-10">
-            <AspectRatio
-              ratio={3 / 2}
-              className="bg-center object-cover"
-              style={{
-                backgroundImage: `url(${thumbSrc})`,
-              }}
-            >
-              <Image
-                className="object-contain backdrop-blur-lg backdrop-saturate-150"
-                fill
+        {thumbSrc ? (
+          <div className="br:container">
+            <div className="float-left w-full br:w-2/3 br:pr-10">
+              <VariantImage
                 alt={event.title}
+                aspectRatio={3 / 2}
                 src={thumbSrc}
               />
-            </AspectRatio>
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <div className="bg-off-black pb-10 text-white">
+        <div className="clear-both w-full bg-off-black py-4 text-white br:float-none br:clear-none br:mb-0 br:w-auto br:pt-0">
           <div className="container">
             <time dateTime={event.date}>
               {date.toLocaleDateString("hr-HR", {
@@ -126,9 +122,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
               {event.fbeventid ? (
                 <span>
                   <a
-                    target="_blank"
-                    rel="noopener noreferrer"
                     href={`https://www.facebook.com/events/${event.fbeventid}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Facebook
                   </a>
@@ -138,10 +134,8 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
           </div>
         </div>
 
-        <div aria-hidden="true" className="clear-both" />
-
         <ProgramContents
-          className="mx-auto max-w-[55vw] pb-14 pt-10 text-lg"
+          className="container clear-both mx-auto pb-14 pt-10 max-br:clear-both br:max-w-[55vw] br:px-0 br:text-lg"
           html={event.content}
         />
 
@@ -158,31 +152,31 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                 </p>
               ) : null}
               <div className="mt-6">
-                <Carousel
-                  withIndicators
-                  height={350}
-                  slideSize="25%"
-                  loop
-                  align="start"
-                >
-                  {event.gallery.gallery_image_album.map(
-                    ({ gallery_image: image }) => {
-                      return (
-                        <Carousel.Slide key={image.id}>
-                          <img
-                            className="h-full w-full object-cover"
-                            alt={image.title}
-                            src={src(image.upload_path)}
-                          />
-                        </Carousel.Slide>
-                      );
-                    },
-                  )}
-                </Carousel>
+                <div className="overflow-hidden">
+                  <Carousel
+                    className="max-br:[--slide-size-override:100%]"
+                    displayed={3}
+                  >
+                    {event.gallery.gallery_image_album.map(
+                      ({ gallery_image: image }) => {
+                        return (
+                          <Carousel.Item key={image.id}>
+                            <AspectRatio ratio={1.2}>
+                              <img
+                                alt={image.title}
+                                className="h-full w-full object-cover"
+                                decoding="async"
+                                loading="lazy"
+                                src={src(image.upload_path)}
+                              />
+                            </AspectRatio>
+                          </Carousel.Item>
+                        );
+                      },
+                    )}
+                  </Carousel>
+                </div>
               </div>
-              <pre className="whitespace-pre-wrap">
-                {JSON.stringify(event.gallery, null, 2)}
-              </pre>
             </div>
           </div>
         ) : null}

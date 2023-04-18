@@ -1,8 +1,15 @@
+import { Prisma } from "@prisma/client";
 import { htmlToText } from "html-to-text";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+
+const utcDate = (year: number, month: number, day: number) => {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+};
 
 export const eventsRouter = createTRPCRouter({
   getUpcomingEvents: publicProcedure.query(async () => {
@@ -71,16 +78,86 @@ export const eventsRouter = createTRPCRouter({
         /* eslint-enable camelcase */
       }
 
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      const description = htmlToText(event.description || event.content || "", {
+        wordwrap: false,
+      })
+        // Replace multiple whitespace (space, newline, etc.) with a single space
+        .replace(/\s+/g, " ")
+        // Trim string to 200 characters and add ellipsis
+        .replace(/^(.{200}[^\s]*).*/, "$1…");
+
       return {
         ...event,
         date: event.date.toISOString(),
-        time: event.time?.toISOString(),
-        description: event.description
-          ? htmlToText(event.description, {
-              wordwrap: false,
-            })
-          : undefined,
+        time: event.time?.toISOString() ?? null,
+        description,
         gallery,
       };
     }),
+
+  getEventsForYear: publicProcedure
+    .input(z.object({ year: z.number() }).optional())
+    .query(async ({ input }) => {
+      const forYear = input?.year ?? new Date().getFullYear();
+      const startOfYear = utcDate(forYear, 1, 1);
+      const startOfYearAfter = utcDate(forYear + 1, 1, 1);
+
+      const events = await prisma.events_event.findMany({
+        where: {
+          AND: [
+            {
+              date: {
+                gte: startOfYear,
+              },
+            },
+            {
+              date: {
+                lt: startOfYearAfter,
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          date: true,
+          price: true,
+          tags: true,
+          thumb: true,
+        },
+        orderBy: {
+          date: "desc",
+        },
+      });
+
+      const groupedByMonth = events.reduce<Record<number, typeof events>>(
+        (acc, event) => {
+          const month = event.date.getMonth();
+
+          if (!acc[month]) {
+            acc[month] = [];
+          }
+
+          acc[month]!.push(event);
+
+          return acc;
+        },
+        {},
+      );
+
+      return {
+        forYear,
+        groupedByMonth,
+      };
+    }),
+
+  getYearsWithEvents: publicProcedure.query(async () => {
+    const eventYears: { date: number }[] = await prisma.$queryRawUnsafe(
+      `select distinct date_part('year', date) as date from ${Prisma.ModelName.events_event} order by date_part('year', date) desc`,
+    );
+
+    return eventYears.map((e) => e.date);
+  }),
 });

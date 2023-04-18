@@ -73,6 +73,56 @@ const config = {
         namedComponents: "arrow-function",
       },
     ],
+    "react/jsx-sort-props": [
+      "error",
+      {
+        callbacksLast: true,
+        shorthandFirst: true,
+        multiline: "last",
+        reservedFirst: true,
+      },
+    ],
+    "react/button-has-type": ["error"],
+    "react/jsx-boolean-value": ["error", "never"],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "allow": "as-needed",
+        "extensions": [".tsx"],
+      },
+    ],
+    "react/jsx-fragments": ["error", "syntax"],
+    "react/jsx-handler-names": ["error"],
+    "react/jsx-key": [
+      "error",
+      {
+        "checkFragmentShorthand": true,
+        "checkKeyMustBeforeSpread": true,
+        "warnOnDuplicates": true,
+      },
+    ],
+    "react/jsx-no-comment-textnodes": ["error"],
+    "react/jsx-no-constructed-context-values": ["error"],
+    "react/jsx-no-duplicate-props": ["error"],
+    "react/jsx-no-leaked-render": ["error"],
+    "react/jsx-no-target-blank": ["error"],
+    "react/jsx-no-useless-fragment": [
+      "error",
+      {
+        "allowExpressions": true,
+      },
+    ],
+    "react/jsx-pascal-case": [
+      "error",
+      {
+        "allowNamespace": true,
+      },
+    ],
+    "react/no-array-index-key": ["error"],
+    "react/no-object-type-as-default-prop": ["error"],
+    "react/no-this-in-sfc": ["error"],
+    "react/no-unstable-nested-components": ["error"],
+    "react/prefer-stateless-function": ["error"],
 
     "no-lone-blocks": "off",
     "camelcase": [
