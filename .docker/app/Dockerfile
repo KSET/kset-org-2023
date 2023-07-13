@@ -7,7 +7,7 @@ FROM node:18-alpine as base
 FROM base as deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .yarn* ./
 # Install dependencies based on the preferred package manager
 RUN \
   if [ -f yarn.lock ]; then yarn install --non-interactive --frozen-lockfile --emoji true; \
