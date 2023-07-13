@@ -150,6 +150,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.0.1":
+  version: 3.1.0
+  resolution: "@hookform/resolvers@npm:3.1.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 8f6690e514e645dd2a38baf573e7a62a9555c95d6a27f84216be7b3ae4cdc1c09111d6f7a38250612e46aa9d562ccec63db9306ec179156381583b444bf552c2
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.8
   resolution: "@humanwhocodes/config-array@npm:0.11.8"
@@ -576,6 +585,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@total-typescript/ts-reset@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@total-typescript/ts-reset@npm:0.4.2"
+  checksum: e3681b8fb48cf63538c19e7f203de5ec8b1abdcd0db5c6bd48e0881e2a86977771118c6c2930691947d11213b10a654bc2328b479c4dc0ddec7dfde129d08569
+  languageName: node
+  linkType: hard
+
 "@trpc/client@npm:^10.18.0":
   version: 10.19.1
   resolution: "@trpc/client@npm:10.19.1"
@@ -683,6 +699,13 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.194":
+  version: 4.14.195
+  resolution: "@types/lodash@npm:4.14.195"
+  checksum: 39b75ca635b3fa943d17d3d3aabc750babe4c8212485a4df166fe0516e39288e14b0c60afc6e21913cc0e5a84734633c71e617e2bd14eaa1cf51b8d7799c432e
   languageName: node
   linkType: hard
 
@@ -3182,17 +3205,20 @@ __metadata:
   resolution: "kset-org-2023@workspace:."
   dependencies:
     "@accessible/drawer": ^3.0.2
+    "@hookform/resolvers": ^3.0.1
     "@next-auth/prisma-adapter": ^1.0.5
     "@prisma/client": ^4.11.0
     "@radix-ui/react-aspect-ratio": ^1.0.2
     "@tanstack/react-query": ^4.28.0
     "@tanstack/react-query-devtools": ^4.29.0
+    "@total-typescript/ts-reset": ^0.4.2
     "@trpc/client": ^10.18.0
     "@trpc/next": ^10.18.0
     "@trpc/react-query": ^10.18.0
     "@trpc/server": ^10.18.0
     "@types/eslint": ^8.21.3
     "@types/html-to-text": ^9.0.0
+    "@types/lodash": ^4.14.194
     "@types/node": ^18.15.5
     "@types/nprogress": ^0.2.0
     "@types/prettier": ^2.7.2
@@ -3210,6 +3236,7 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     eslint-plugin-simple-import-sort: ^10.0.0
     html-to-text: ^9.0.5
+    lodash: ^4.17.21
     next: ~13.2.4
     next-auth: 4.20.1
     next-seo: ^6.0.0
@@ -3218,14 +3245,17 @@ __metadata:
     prettier: ^2.8.6
     prettier-plugin-tailwindcss: ^0.2.6
     prisma: ^4.11.0
+    rambdax: ^9.1.0
     react: 18.2.0
     react-cookie: ^4.1.1
     react-dom: 18.2.0
+    react-hook-form: ^7.43.9
     react-icons: ^4.8.0
     sass: ^1.60.0
     sharp: ^0.32.0
     superjson: 1.12.2
     tailwindcss: ^3.3.0
+    type-fest: ^3.8.0
     typescript: ^5.0.2
     universal-cookie: ^4.0.4
     zod: ^3.21.4
@@ -3292,6 +3322,13 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: ad580b4bdbb7ca1f7abf7e1bce63a9a0b98e370cf40194b03380a46b4ed799c9573029599caebc1b14e3f24b111aef72b96674a56cfa105e0f5ac70546cdc005
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
   languageName: node
   linkType: hard
 
@@ -4340,6 +4377,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rambdax@npm:^9.1.0":
+  version: 9.1.1
+  resolution: "rambdax@npm:9.1.1"
+  checksum: 9187d876f09766741ef0dc6c9d7e7e14149c864ced6d63f956af83f7a3a1001cb6f8d7a23615b824799ec2b0ac096b3799499e33850f42460dc2e0725291467d
+  languageName: node
+  linkType: hard
+
 "rc@npm:^1.2.7":
   version: 1.2.8
   resolution: "rc@npm:1.2.8"
@@ -4376,6 +4420,15 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.43.9":
+  version: 7.44.2
+  resolution: "react-hook-form@npm:7.44.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 0c17f8fc33b52ff3caa9de433e1ff3e79f9b797bddd2e80f1156d8a6324710cc360b700e560562ee822e129b440f730f2990caa1e79a3eb66094d9e235410b46
   languageName: node
   linkType: hard
 
@@ -5187,6 +5240,13 @@ __metadata:
   version: 0.20.2
   resolution: "type-fest@npm:0.20.2"
   checksum: 4fb3272df21ad1c552486f8a2f8e115c09a521ad7a8db3d56d53718d0c907b62c6e9141ba5f584af3f6830d0872c521357e512381f24f7c44acae583ad517d73
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^3.8.0":
+  version: 3.11.1
+  resolution: "type-fest@npm:3.11.1"
+  checksum: 33be49e3b671c2ff3b5e320ef8c160c488205b08ab7631369116909a1baf2aebfcf45234c045e6902b8aa35730ac2bfd0655ea9e0fe3f8d26af9d99a16b07abd
   languageName: node
   linkType: hard
 

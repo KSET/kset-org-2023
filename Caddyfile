@@ -1,4 +1,6 @@
-kset.loc, www.kset.loc {
+kset.saturn.ji0.li,
+www.kset.loc,
+kset.loc {
 	tls internal
 
 	reverse_proxy localhost:3000

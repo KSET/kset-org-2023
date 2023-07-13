@@ -1,13 +1,16 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { type FC, type HTMLProps } from "react";
+import { type FC, type HTMLProps, type ReactNode, useMemo } from "react";
 
 import ImageHero from "~/assets/page/index/hero.png";
+import AppImage from "~/components/base/image/app-image";
+import VariantImage from "~/components/base/image/variant-image";
 import { cn } from "~/utils/class";
 import { api, type RouterOutputs } from "~/utils/queryApi";
 
 type TEventItem = RouterOutputs["events"]["getUpcomingEvents"][number];
+type TNewsItem = RouterOutputs["news"]["getNews"][number];
 
 const EventItem: FC<HTMLProps<HTMLDivElement> & { item: TEventItem }> = ({
   item,
@@ -54,27 +57,282 @@ const EventItem: FC<HTMLProps<HTMLDivElement> & { item: TEventItem }> = ({
   );
 };
 
-const PageIndex: NextPage = () => {
+const SectionUpcomingEvents: FC = () => {
   const [upcomingEvents] = api.events.getUpcomingEvents.useSuspenseQuery();
 
+  if (upcomingEvents.length === 0) {
+    return null;
+  }
+
+  return (
+    <section>
+      <h2 className="mb-56 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
+        Nadolazeći događaji
+      </h2>
+      <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
+        {upcomingEvents.map((event) => (
+          <EventItem key={event.id} className="bg-off-black" item={event} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const NewsItem: FC<HTMLProps<HTMLDivElement> & { item: TNewsItem }> = ({
+  item,
+}) => {
+  return (
+    <Link
+      className="text-white no-underline"
+      href={{
+        pathname: "/news/[slug]",
+        query: { slug: item.slug },
+      }}
+    >
+      <article>
+        <VariantImage alt={item.subject} aspectRatio={1.15} src={item.thumb} />
+        <div className="mt-5 text-sm tracking-widest">
+          <span className="text-primary">Ligma</span>
+          <span className="mx-3 opacity-30">&ndash;</span>
+          <time dateTime={item.created_at.toISOString()}>
+            {item.created_at.toLocaleDateString("hr-HR")}
+          </time>
+        </div>
+        <div>
+          <h3 className="text-lg font-bold leading-6 tracking-wider">
+            {item.subject}
+          </h3>
+          <p className="mt-2 line-clamp-4 leading-5 tracking-wider opacity-70">
+            {item.description}
+          </p>
+        </div>
+      </article>
+    </Link>
+  );
+};
+
+const SectionNews: FC = () => {
+  const [news] = api.news.getNews.useSuspenseQuery();
+
+  return (
+    <section>
+      <h2
+        className="flex flex-wrap items-center text-3xl font-bold uppercase"
+        id="news"
+      >
+        <span className="tracking-[2.4px]">Vijesti</span>
+        <Link
+          className="ml-auto text-base tracking-wider no-underline hover:underline"
+          href={{
+            pathname: "/news",
+          }}
+        >
+          Vidi vijesti &rarr;
+        </Link>
+      </h2>
+
+      <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 br:grid-cols-4">
+        {news.map((news) => (
+          <NewsItem key={news.id} item={news} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const WhatWeDoCard: FC<
+  HTMLProps<HTMLDivElement> & {
+    title: ReactNode;
+    body: ReactNode;
+    image?: {
+      src: string;
+      alt: string;
+    };
+  }
+> = ({ title, body, image, ...props }) => {
+  return (
+    <div {...props} className={cn(props.className, "tracking-wide")}>
+      <div className="px-8">
+        <div className="aspect-square w-full overflow-hidden rounded-full bg-stone-300">
+          {image ? (
+            <img
+              alt={image.alt}
+              className="aspect-square w-full object-cover object-center"
+              src={image.src}
+            />
+          ) : null}
+        </div>
+      </div>
+      <h5 className="mt-12 text-center text-lg font-bold uppercase opacity-80">
+        {title}
+      </h5>
+      <p className="text-center opacity-80">{body}</p>
+    </div>
+  );
+};
+
+const SectionWhatWeDo: FC = () => {
+  const items = useMemo(
+    () => [
+      {
+        title: "Jutarnji šank",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus.",
+        image: {
+          src: "https://loremflickr.com/1280/720",
+          alt: "Jutarnji šank",
+        },
+      },
+      {
+        title: "Večernji program",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus.",
+        image: {
+          src: "https://loremflickr.com/720/1280",
+          alt: "Večernji program",
+        },
+      },
+      {
+        title: "Projekti",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus.",
+        image: {
+          src: "https://loremflickr.com/2000/2000",
+          alt: "Projekti",
+        },
+      },
+      {
+        title: "Edukacija",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus.",
+        image: {
+          src: "https://loremflickr.com/50/50",
+          alt: "Edukacija",
+        },
+      },
+    ],
+    [],
+  );
+
+  return (
+    <section className="mt-28 bg-secondary p-11">
+      <h2 className="text-center text-3xl font-bold tracking-wide">
+        Čime se bavimo?
+      </h2>
+
+      <div className="mt-14 grid grid-cols-1 justify-between gap-8 md:grid-cols-2 br:grid-cols-4">
+        {items.map((item) => (
+          <WhatWeDoCard key={item.title} {...item} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const SectionQuiz: FC = () => {
+  return (
+    <div className="mx-20 mt-16 grid grid-cols-[minmax(0,4fr),minmax(0,3fr)] gap-16">
+      <div className="bg-stone-300">
+        <AppImage
+          alt="Pronađi svoju sekciju i postani član KSET-a!"
+          mode="cover"
+          src="https://loremflickr.com/1920/1080"
+          aspect={{
+            ratio: 555 / 442,
+          }}
+        />
+      </div>
+
+      <div className="mb-11 mt-14 flex flex-col items-start tracking-wide">
+        <h3 className="text-3xl font-bold">
+          Pronađi svoju sekciju i postani član KSET-a!
+        </h3>
+        <p className="mt-4 opacity-80">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in
+          laoreet lectus. Vestibulum ante ipsum primis in faucibus orci luctus
+          et ultrices posuere cubilia curae; Vivamus turpis dui, semper
+          lobortis.
+        </p>
+
+        <button
+          className="mt-auto bg-primary px-7 py-3 font-bold tracking-wide text-secondary"
+          type="button"
+        >
+          OTKRIJ KOJA SI SEKCIJA
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SectionGallery: FC = () => {
+  const [gallery] = api.gallery.getGalleries.useSuspenseQuery();
+
+  return (
+    <section className="mt-20">
+      <div className="mb-9 flex items-center">
+        <h2 className="text-3xl font-bold uppercase tracking-widest">
+          Fotogalerija
+        </h2>
+
+        <a className="ml-auto uppercase no-underline" href="#">
+          Vidi galeriju &rarr;
+        </a>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 br:grid-cols-4">
+        {gallery.map((item) => (
+          <Link
+            key={item.id}
+            className="text-white no-underline"
+            href={{
+              pathname: "/multimedia/gallery/[slug]",
+              query: {
+                slug: item.slug,
+              },
+            }}
+          >
+            <VariantImage
+              alt={item.title}
+              aspectRatio={271 / 230}
+              mode="cover"
+              src={item.thumb}
+            />
+
+            <div className="mt-5">
+              <div className="text-sm tracking-widest">
+                <time dateTime={item.date_of_event.toISOString()}>
+                  {item.date_of_event.toLocaleDateString("hr-HR")}
+                </time>
+                <span className="ml-3 mr-5 text-primary">|</span>
+                <span>{item.gallery_photographer?.name}</span>
+              </div>
+              <h4 className="mt-2 text-lg font-bold tracking-wide">
+                {item.title}
+              </h4>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const PageIndex: NextPage = () => {
   return (
     <>
       <Image
         priority
         alt="KSET tri kruga (volončelo, gitara, bubanj)"
-        className="w-full object-contain object-center"
+        className="mb-8 w-full object-contain object-center"
         src={ImageHero}
       />
-      <section>
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
-          Nadolazeći događaji
-        </h2>
-        <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
-          {upcomingEvents.map((event) => (
-            <EventItem key={event.id} className="bg-off-black" item={event} />
-          ))}
-        </div>
-      </section>
+
+      <SectionUpcomingEvents />
+
+      <SectionNews />
+
+      <SectionWhatWeDo />
+
+      <SectionQuiz />
+
+      <SectionGallery />
     </>
   );
 };
