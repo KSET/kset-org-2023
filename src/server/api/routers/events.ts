@@ -25,6 +25,7 @@ export const eventsRouter = createTRPCRouter({
         time: true,
         price: true,
         slug: true,
+        daytime: true,
       },
       take: 5,
       where: {
@@ -102,6 +103,7 @@ export const eventsRouter = createTRPCRouter({
       const forYear = input?.year ?? new Date().getFullYear();
       const startOfYear = utcDate(forYear, 1, 1);
       const startOfYearAfter = utcDate(forYear + 1, 1, 1);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const events = await prisma.events_event.findMany({
         where: {

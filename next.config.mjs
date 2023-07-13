@@ -69,7 +69,7 @@ const config = {
   },
 
   experimental: {
-    appDir: true,
+    // appDir: true,
     adjustFontFallbacks: true,
   },
 };

@@ -1,13 +1,20 @@
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 
+import { cn } from "~/utils/class";
 import { src as imgSrc, urlVariants } from "~/utils/kset-image";
 
-const VariantImage: FC<{
-  src: string | undefined | null;
-  alt: string;
-  aspectRatio?: number;
-}> = ({ src, alt, aspectRatio = 3 / 2 }) => {
+import AppImage, { type AppImageProps } from "../app-image";
+
+const VariantImage: FC<
+  AppImageProps & {
+    aspectRatio?: number;
+  }
+> = ({ src, alt, aspect, aspectRatio, ...props }) => {
+  const ratio = useMemo(
+    () => aspectRatio ?? aspect?.ratio ?? 3 / 2,
+    [aspect?.ratio, aspectRatio],
+  );
+
   if (!src) {
     return <div />;
   }
@@ -15,21 +22,20 @@ const VariantImage: FC<{
   src = imgSrc(src);
 
   return (
-    <AspectRatio
-      className="bg-cover bg-center bg-no-repeat object-cover"
-      ratio={aspectRatio}
-      style={{
-        backgroundImage: urlVariants(src),
+    <AppImage
+      {...props}
+      alt={alt}
+      className={cn(props.className, "backdrop-blur-lg backdrop-saturate-150")}
+      src={src}
+      aspect={{
+        ratio,
+        style: {
+          backgroundImage: urlVariants(src),
+          ...aspect?.style,
+        },
+        ...aspect,
       }}
-    >
-      <img
-        alt={alt}
-        className="h-full w-full object-contain backdrop-blur-lg backdrop-saturate-150"
-        decoding="async"
-        loading="lazy"
-        src={src}
-      />
-    </AspectRatio>
+    />
   );
 };
 

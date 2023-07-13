@@ -65,7 +65,7 @@ export const urlVariants = <
   TRet extends TSrc extends string ? string : null,
 >(
   thumbSrc: TSrc,
-  variants = ["medium", "fb_thumb", null] as TVariant[],
+  variants = ["fb_thumb", "medium", null] as TVariant[],
 ) => {
   if (!thumbSrc) {
     return null as TRet;
