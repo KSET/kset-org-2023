@@ -18,10 +18,13 @@ export const getServerSideProps = async (
   const year = Number.isInteger(queryYear)
     ? Number(queryYear)
     : new Date().getFullYear();
-  await helpers.events.getEventsForYear.prefetch({
-    year,
-  });
-  await helpers.events.getYearsWithEvents.prefetch();
+
+  await Promise.allSettled([
+    helpers.events.getEventsForYear.prefetch({
+      year,
+    }),
+    helpers.events.getYearsWithEvents.prefetch(),
+  ]);
 
   return {
     props: {
