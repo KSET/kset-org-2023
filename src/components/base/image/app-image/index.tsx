@@ -1,11 +1,9 @@
-import {
-  AspectRatio,
-  type AspectRatioProps,
-} from "@radix-ui/react-aspect-ratio";
 import { type DetailedHTMLProps, type FC, type ImgHTMLAttributes } from "react";
 
 import { cn } from "~/utils/class";
 import { type Src } from "~/utils/kset-image";
+
+import AspectRatio, { type AspectRatioProps } from "../../aspect-ratio";
 
 export type ImgProps = DetailedHTMLProps<
   ImgHTMLAttributes<HTMLImageElement>,
