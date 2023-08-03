@@ -60,6 +60,11 @@ const config = {
         destination: "/contact",
         permanent: false,
       },
+      {
+        source: "/gallery/live/:slug",
+        destination: "/multimedia/live/:slug",
+        permanent: false,
+      },
     ]);
   },
 
@@ -69,7 +74,7 @@ const config = {
   },
 
   experimental: {
-    // appDir: true,
+    typedRoutes: true,
     adjustFontFallbacks: true,
   },
 };

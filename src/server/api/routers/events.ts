@@ -4,12 +4,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
-
-const utcDate = (year: number, month: number, day: number) => {
-  const date = new Date(Date.UTC(year, month - 1, day));
-  date.setUTCHours(0, 0, 0, 0);
-  return date;
-};
+import { utcDate } from "~/utils/date";
 
 export const eventsRouter = createTRPCRouter({
   getUpcomingEvents: publicProcedure.query(async () => {
@@ -101,9 +96,8 @@ export const eventsRouter = createTRPCRouter({
     .input(z.object({ year: z.number() }).optional())
     .query(async ({ input }) => {
       const forYear = input?.year ?? new Date().getFullYear();
-      const startOfYear = utcDate(forYear, 1, 1);
-      const startOfYearAfter = utcDate(forYear + 1, 1, 1);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const startOfYear = utcDate({ year: forYear, month: 1, day: 1 });
+      const startOfYearAfter = utcDate({ year: forYear + 1, month: 1, day: 1 });
 
       const events = await prisma.events_event.findMany({
         where: {
@@ -157,7 +151,7 @@ export const eventsRouter = createTRPCRouter({
 
   getYearsWithEvents: publicProcedure.query(async () => {
     const eventYears: { date: number }[] = await prisma.$queryRawUnsafe(
-      `select distinct date_part('year', date) as date from ${Prisma.ModelName.events_event} order by date_part('year', date) desc`,
+      `select distinct date_part('year', ${Prisma.Events_eventScalarFieldEnum.date}) as date from ${Prisma.ModelName.events_event} order by date_part('year', ${Prisma.Events_eventScalarFieldEnum.date}) desc`,
     );
 
     return eventYears.map((e) => e.date);

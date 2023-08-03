@@ -1,4 +1,4 @@
-import { type FC, useMemo } from "react";
+import { type FC } from "react";
 
 import { cn } from "~/utils/class";
 import { src as imgSrc, urlVariants } from "~/utils/kset-image";
@@ -10,10 +10,7 @@ const VariantImage: FC<
     aspectRatio?: number;
   }
 > = ({ src, alt, aspect, aspectRatio, ...props }) => {
-  const ratio = useMemo(
-    () => aspectRatio ?? aspect?.ratio ?? 3 / 2,
-    [aspect?.ratio, aspectRatio],
-  );
+  const ratio = aspectRatio ?? aspect?.ratio ?? 3 / 2;
 
   if (!src) {
     return <div />;
