@@ -227,7 +227,7 @@ const SectionWhatWeDo: FC = () => {
 
 const SectionQuiz: FC = () => {
   return (
-    <div className="mx-20 mt-16 grid grid-cols-[minmax(0,4fr),minmax(0,3fr)] gap-16">
+    <div className="mt-16 flex flex-col br:mx-20 br:grid br:grid-cols-[minmax(0,4fr),minmax(0,3fr)] br:gap-16">
       <div className="bg-stone-300">
         <AppImage
           alt="Pronađi svoju sekciju i postani član KSET-a!"
@@ -239,10 +239,11 @@ const SectionQuiz: FC = () => {
         />
       </div>
 
-      <div className="mb-11 mt-14 flex flex-col items-start tracking-wide">
+      <div className="mt-6 flex flex-col items-start tracking-wide br:mb-11 br:mt-14">
         <h3 className="text-3xl font-bold">
           Pronađi svoju sekciju i postani član KSET-a!
         </h3>
+
         <p className="mt-4 opacity-80">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in
           laoreet lectus. Vestibulum ante ipsum primis in faucibus orci luctus
@@ -251,7 +252,7 @@ const SectionQuiz: FC = () => {
         </p>
 
         <button
-          className="mt-auto bg-primary px-7 py-3 font-bold tracking-wide text-secondary"
+          className="mt-6 bg-primary px-7 py-3 font-bold tracking-wide text-secondary br:mt-auto"
           type="button"
         >
           OTKRIJ KOJA SI SEKCIJA
