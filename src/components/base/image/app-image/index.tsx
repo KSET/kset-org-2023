@@ -20,33 +20,41 @@ type LocalAppImageProps = {
 export type AppImageProps = Omit<ImgProps, keyof LocalAppImageProps> &
   LocalAppImageProps;
 
-const AppImage: FC<AppImageProps> = ({
-  src,
-  alt,
-  aspect,
-  mode = "contain",
-  ...props
-}) => {
+const Img: FC<AppImageProps> = ({ src, mode = "contain", ...props }) => {
+  return (
+    <img
+      {...props}
+      alt={props.alt}
+      decoding="async"
+      loading="lazy"
+      src={src ?? undefined}
+      className={cn(
+        props.className,
+        "h-full w-full",
+        mode === "contain" ? "object-contain" : "object-cover",
+      )}
+    />
+  );
+};
+
+const AppImage: FC<AppImageProps> = ({ aspect, ...props }) => {
+  if (!aspect) {
+    return (
+      <div className="relative w-full">
+        <Img {...props} />
+      </div>
+    );
+  }
+
   return (
     <AspectRatio
       {...aspect}
       className={cn(
-        aspect?.className,
+        aspect.className,
         "bg-cover bg-center bg-no-repeat object-cover",
       )}
     >
-      <img
-        {...props}
-        alt={alt}
-        decoding="async"
-        loading="lazy"
-        src={src ?? undefined}
-        className={cn(
-          props.className,
-          "h-full w-full",
-          mode === "contain" ? "object-contain" : "object-cover",
-        )}
-      />
+      <Img {...props} />
     </AspectRatio>
   );
 };
