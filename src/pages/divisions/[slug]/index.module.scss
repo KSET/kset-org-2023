@@ -1,0 +1,30 @@
+.divisionText {
+  ul {
+    @apply my-10 gap-6;
+    display: flex;
+    flex-flow: column;
+
+    li {
+      $scale: 1.4;
+
+      padding-left: #{$scale * 1em};
+      position: relative;
+      align-items: baseline;
+
+      &::before {
+        @apply text-primary;
+
+        content: "•";
+        position: absolute;
+        top: 0.1em;
+        left: 0;
+        font-size: #{$scale * 1em};
+        line-height: #{1 / $scale};
+      }
+    }
+  }
+
+  p:not(:first-child) {
+    @apply mt-4;
+  }
+}
