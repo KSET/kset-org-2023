@@ -7,6 +7,7 @@ import { type FC, useEffect, useState } from "react";
 import VariantImage from "~/components/base/image/variant-image";
 import LoadingArea from "~/components/base/loading";
 import { type ServerSideProps } from "~/types/server";
+import { cn } from "~/utils/class";
 import { src } from "~/utils/kset-image";
 import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
@@ -118,10 +119,14 @@ const NewsList: FC<{
           return (
             <article
               key={newsItem.id}
+              className="flex"
               id={`news_${newsItem.slug ?? newsItem.id}`}
             >
               <Link
-                className="text-white no-underline opacity-90 transition-opacity duration-300 hover:opacity-100 hover:duration-0"
+                className={cn(
+                  "w-full text-white no-underline opacity-90 transition-opacity duration-300 hover:opacity-100 hover:duration-0",
+                  !newsItem.thumb ? "mt-auto" : null,
+                )}
                 href={{
                   pathname: "/news/[slug]",
                   query: {
@@ -129,14 +134,12 @@ const NewsList: FC<{
                   },
                 }}
               >
-                <div>
-                  <VariantImage
-                    alt={newsItem.subject}
-                    aspectRatio={16 / 10}
-                    className="w-full"
-                    src={src(newsItem.thumb)}
-                  />
-                </div>
+                <VariantImage
+                  alt={newsItem.subject}
+                  aspectRatio={16 / 10}
+                  className="w-full"
+                  src={src(newsItem.thumb)}
+                />
 
                 <div className="mb-2 mt-5 text-sm tracking-widest">
                   <span className="text-primary">Ligma</span>
