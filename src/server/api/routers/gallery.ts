@@ -14,15 +14,13 @@ export const galleryRouter = createTRPCRouter({
         .default({}),
     )
     .query(async ({ input }) => {
-      const galleries = await prisma.gallery_album.findMany({
+      const galleries = await prisma.galleryAlbum.findMany({
         take: input.count,
         orderBy: {
-          // eslint-disable-next-line camelcase
-          date_of_event: "desc",
+          dateOfEvent: "desc",
         },
         include: {
-          // eslint-disable-next-line camelcase
-          gallery_photographer: true,
+          photographer: true,
         },
       });
 
@@ -36,18 +34,15 @@ export const galleryRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const gallery = await prisma.gallery_album.findFirst({
+      const gallery = await prisma.galleryAlbum.findFirst({
         where: {
           slug: input.slug,
         },
         include: {
-          // eslint-disable-next-line camelcase
-          gallery_photographer: true,
-          // eslint-disable-next-line camelcase
-          gallery_image_album: {
+          photographer: true,
+          galleryImageAlbum: {
             include: {
-              // eslint-disable-next-line camelcase
-              gallery_image: true,
+              image: true,
             },
           },
         },

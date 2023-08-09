@@ -95,8 +95,8 @@ const NewsList: FC<{
             <div className="mb-2 mt-5 text-sm tracking-widest">
               <span className="text-primary">Ligma</span>
               <span className="mx-3 opacity-30">&mdash;</span>
-              <time dateTime={firstItem.created_at.toISOString()}>
-                {NewsDateFormatter.format(firstItem.created_at)}
+              <time dateTime={firstItem.createdAt.toISOString()}>
+                {NewsDateFormatter.format(firstItem.createdAt)}
               </time>
             </div>
 
@@ -144,8 +144,8 @@ const NewsList: FC<{
                 <div className="mb-2 mt-5 text-sm tracking-widest">
                   <span className="text-primary">Ligma</span>
                   <span className="mx-3 opacity-30">&mdash;</span>
-                  <time dateTime={newsItem.created_at.toISOString()}>
-                    {NewsDateFormatter.format(newsItem.created_at)}
+                  <time dateTime={newsItem.createdAt.toISOString()}>
+                    {NewsDateFormatter.format(newsItem.createdAt)}
                   </time>
                 </div>
 

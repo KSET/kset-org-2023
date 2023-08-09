@@ -49,9 +49,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
         description={event.description}
         title={event.title}
         facebook={
-          event.fbeventid
+          event.fbEventId
             ? {
-                appId: event.fbeventid,
+                appId: event.fbEventId,
               }
             : undefined
         }
@@ -119,10 +119,10 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                   })}
                 </span>
               ) : null}
-              {event.fbeventid ? (
+              {event.fbEventId ? (
                 <span>
                   <a
-                    href={`https://www.facebook.com/events/${event.fbeventid}`}
+                    href={`https://www.facebook.com/events/${event.fbEventId}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -145,10 +145,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
               <h2 className="text-center text-3xl font-bold uppercase leading-8 tracking-widest">
                 Fotke eventa
               </h2>
-              {event.gallery.gallery_photographer ? (
+              {event.gallery.photographer ? (
                 <p className="mt-2 text-center leading-none">
-                  foto:{" "}
-                  <a href="#">{event.gallery.gallery_photographer.name}</a>
+                  foto: <a href="#">{event.gallery.photographer.name}</a>
                 </p>
               ) : null}
               <div className="mt-6">
@@ -157,23 +156,21 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                     className="max-br:[--slide-size-override:100%]"
                     displayed={3}
                   >
-                    {event.gallery.gallery_image_album.map(
-                      ({ gallery_image: image }) => {
-                        return (
-                          <Carousel.Item key={image.id}>
-                            <AspectRatio ratio={1.2}>
-                              <img
-                                alt={image.title}
-                                className="h-full w-full object-cover"
-                                decoding="async"
-                                loading="lazy"
-                                src={src(image.upload_path)}
-                              />
-                            </AspectRatio>
-                          </Carousel.Item>
-                        );
-                      },
-                    )}
+                    {event.gallery.galleryImageAlbum.map(({ image }) => {
+                      return (
+                        <Carousel.Item key={image.id}>
+                          <AspectRatio ratio={1.2}>
+                            <img
+                              alt={image.title}
+                              className="h-full w-full object-cover"
+                              decoding="async"
+                              loading="lazy"
+                              src={src(image.uploadPath)}
+                            />
+                          </AspectRatio>
+                        </Carousel.Item>
+                      );
+                    })}
                   </Carousel>
                 </div>
               </div>

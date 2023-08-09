@@ -1,14 +1,17 @@
-import { Prisma } from "@prisma/client";
 import { htmlToText } from "html-to-text";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import { utcDate } from "~/utils/date";
+import { dbFieldsOfModel, dbModelFor } from "~/utils/prisma";
+
+const ClubEventModel = dbModelFor("ClubEvent");
+const ClubEventDbFields = dbFieldsOfModel(ClubEventModel);
 
 export const eventsRouter = createTRPCRouter({
   getUpcomingEvents: publicProcedure.query(async () => {
-    const events = await prisma.events_event.findMany({
+    const events = await prisma.clubEvent.findMany({
       orderBy: {
         date: "asc",
       },
@@ -36,7 +39,7 @@ export const eventsRouter = createTRPCRouter({
   getEventInfo: publicProcedure
     .input(z.object({ slug: z.string(), withImages: z.boolean().optional() }))
     .query(async ({ input }) => {
-      const event = await prisma.events_event.findFirst({
+      const event = await prisma.clubEvent.findFirst({
         where: {
           slug: input.slug,
         },
@@ -48,30 +51,28 @@ export const eventsRouter = createTRPCRouter({
 
       let gallery = null;
       if (input.withImages) {
-        /* eslint-disable camelcase */
-        gallery = await prisma.gallery_album.findFirst({
+        gallery = await prisma.galleryAlbum.findFirst({
           where: {
             slug: input.slug,
           },
           select: {
-            gallery_image_album: {
+            galleryImageAlbum: {
               select: {
-                gallery_image: {
+                image: {
                   select: {
                     id: true,
                     slug: true,
                     title: true,
-                    upload_path: true,
+                    uploadPath: true,
                     caption: true,
                   },
                 },
               },
               take: 10,
             },
-            gallery_photographer: true,
+            photographer: true,
           },
         });
-        /* eslint-enable camelcase */
       }
 
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -99,7 +100,7 @@ export const eventsRouter = createTRPCRouter({
       const startOfYear = utcDate({ year: forYear, month: 1, day: 1 });
       const startOfYearAfter = utcDate({ year: forYear + 1, month: 1, day: 1 });
 
-      const events = await prisma.events_event.findMany({
+      const events = await prisma.clubEvent.findMany({
         where: {
           AND: [
             {
@@ -151,7 +152,11 @@ export const eventsRouter = createTRPCRouter({
 
   getYearsWithEvents: publicProcedure.query(async () => {
     const eventYears: { date: number }[] = await prisma.$queryRawUnsafe(
-      `select distinct date_part('year', ${Prisma.Events_eventScalarFieldEnum.date}) as date from ${Prisma.ModelName.events_event} order by date_part('year', ${Prisma.Events_eventScalarFieldEnum.date}) desc`,
+      `select distinct date_part('year', ${
+        ClubEventDbFields.date
+      }) as date from "${
+        ClubEventModel.dbName ?? ""
+      }" order by date_part('year', ${ClubEventDbFields.date}) desc`,
     );
 
     return eventYears.map((e) => e.date);

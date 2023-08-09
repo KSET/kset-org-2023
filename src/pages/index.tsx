@@ -94,8 +94,8 @@ const NewsItem: FC<HTMLProps<HTMLDivElement> & { item: TNewsItem }> = ({
         <div className="mt-5 text-sm tracking-widest">
           <span className="text-primary">Ligma</span>
           <span className="mx-3 opacity-30">&ndash;</span>
-          <time dateTime={item.created_at.toISOString()}>
-            {item.created_at.toLocaleDateString("hr-HR")}
+          <time dateTime={item.createdAt.toISOString()}>
+            {item.createdAt.toLocaleDateString("hr-HR")}
           </time>
         </div>
         <div>
@@ -298,11 +298,11 @@ const SectionGallery: FC = () => {
 
             <div className="mt-5">
               <div className="text-sm tracking-widest">
-                <time dateTime={item.date_of_event.toISOString()}>
-                  {item.date_of_event.toLocaleDateString("hr-HR")}
+                <time dateTime={item.dateOfEvent.toISOString()}>
+                  {item.dateOfEvent.toLocaleDateString("hr-HR")}
                 </time>
                 <span className="ml-3 mr-5 text-primary">|</span>
-                <span>{item.gallery_photographer?.name}</span>
+                <span>{item.photographer?.name}</span>
               </div>
               <h4 className="mt-2 text-lg font-bold tracking-wide">
                 {item.title}

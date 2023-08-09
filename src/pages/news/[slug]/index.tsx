@@ -25,10 +25,8 @@ const fixNewsItem = (newsItem: Maybe<NewsItem>) => {
 
   return {
     ...newsItem,
-    // eslint-disable-next-line camelcase
-    created_at: newsItem.created_at.toISOString(),
-    // eslint-disable-next-line camelcase
-    expire_at: newsItem.expire_at?.toISOString() ?? null,
+    createdAt: newsItem.createdAt.toISOString(),
+    expiresAt: newsItem.expiresAt?.toISOString() ?? null,
   };
 };
 
@@ -85,7 +83,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
     return null;
   }
 
-  const date = new Date(newsItem.created_at);
+  const date = new Date(newsItem.createdAt);
   const thumbSrc = src(newsItem.thumb);
 
   return (
@@ -168,7 +166,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
 
         <div className="mt-8 grid grid-cols-1 items-baseline gap-8 br:grid-cols-3">
           {recentNews?.filter(Boolean).map((newsItem) => {
-            const date = new Date(newsItem.created_at);
+            const date = new Date(newsItem.createdAt);
             const thumbSrc = src(newsItem.thumb);
 
             return (
@@ -194,7 +192,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
                   <div className="mb-2 mt-5 text-sm tracking-widest">
                     <span className="text-primary">Ligma</span>
                     <span className="mx-3 opacity-30">&mdash;</span>
-                    <time dateTime={newsItem.created_at}>
+                    <time dateTime={newsItem.createdAt}>
                       {date.toLocaleDateString("hr-HR")}
                     </time>
                   </div>

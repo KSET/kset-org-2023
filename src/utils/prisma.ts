@@ -53,6 +53,31 @@ export const PrismaModels = getPrismaModels();
 
 export type PrismaModel = (typeof PrismaModels)[keyof typeof PrismaModels];
 
-export const modelFor = <T extends ModelName>(modelName: T) => {
+export const dbModelFor = <T extends ModelName>(modelName: T) => {
   return PrismaModels[modelName];
+};
+
+export const dbFieldsOfModel = <T extends ModelName | PrismaModel>(
+  modelName: T,
+) => {
+  type TModel = T extends PrismaModel
+    ? T
+    : T extends keyof PrismaModel
+    ? PrismaModel[T]
+    : never;
+
+  const model = (
+    typeof modelName === "string" ? dbModelFor(modelName) : modelName
+  ) as TModel;
+
+  type FieldName = keyof TModel["fields"];
+
+  const keyEnum = Object.fromEntries(
+    Object.values(model.fields).map((field) => [
+      field.name,
+      field.resolvedName,
+    ]),
+  );
+
+  return keyEnum as { [Key in FieldName]: string };
 };
