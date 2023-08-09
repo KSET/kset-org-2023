@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { type Simplify } from "@trpc/server";
+
 export type Dict<TVal = unknown, TKey = string> = Record<TKey, TVal>;
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -22,3 +24,5 @@ export type RecursiveNonPartial<T> = {
 export type RecursiveMutable<T> = {
   -readonly [P in keyof T]: RecursiveMutable<T[P]>;
 };
+
+export type Assign<T, TAssign> = Simplify<TAssign & Omit<T, keyof TAssign>>;
