@@ -65,8 +65,8 @@ const SectionUpcomingEvents: FC = () => {
   }
 
   return (
-    <section>
-      <h2 className="mb-56 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
+    <section className="mb-56">
+      <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
         Nadolazeći događaji
       </h2>
       <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
@@ -131,7 +131,7 @@ const SectionNews: FC = () => {
         </Link>
       </h2>
 
-      <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 br:grid-cols-4">
+      <div className="mt-9 grid grid-cols-1 gap-8 md:grid-cols-2 br:grid-cols-4">
         {news.map((news) => (
           <NewsItem key={news.id} item={news} />
         ))}
