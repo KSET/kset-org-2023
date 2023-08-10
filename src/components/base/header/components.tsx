@@ -55,7 +55,15 @@ export const NavDrawer: FC<{ items: NavItem[] }> = ({ items }) => {
   return (
     <nav className="ml-auto px-4">
       <div className="flex h-full br:hidden">
-        <Drawer.Drawer>
+        <Drawer.Drawer
+          onChange={(open) => {
+            if (open) {
+              document.body.classList.add("overflow-hidden");
+            } else {
+              document.body.classList.remove("overflow-hidden");
+            }
+          }}
+        >
           <Drawer.Trigger>
             <button
               className="aspect-square h-full w-full flex-1 opacity-80 transition-opacity hover:opacity-100"
