@@ -5,7 +5,6 @@
  * We also create a few inference helpers for input and output types.
  */
 import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
@@ -37,17 +36,3 @@ export const api = createTRPCProxyClient<AppRouter>({
     }),
   ],
 });
-
-/**
- * Inference helper for inputs.
- *
- * @example type HelloInput = RouterInputs['example']['hello']
- */
-export type RouterInputs = inferRouterInputs<AppRouter>;
-
-/**
- * Inference helper for outputs.
- *
- * @example type HelloOutput = RouterOutputs['example']['hello']
- */
-export type RouterOutputs = inferRouterOutputs<AppRouter>;

@@ -13,11 +13,12 @@ import { SeparatedItems } from "~/components/util/separated-items";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { type ServerSideProps } from "~/types/server";
+import { type TrpcResult } from "~/types/trpc";
 import { src } from "~/utils/kset-image";
-import { api, type RouterOutputs } from "~/utils/queryApi";
+import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
 
-type ClubEvent = RouterOutputs["events"]["getEventInfo"];
+type ClubEvent = TrpcResult<"events.getEventInfo">;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -40,7 +41,7 @@ export const getServerSideProps = async (
 
 type Props = ServerSideProps<typeof getServerSideProps>;
 
-const Seo: FC<{ event: NonNullable<ClubEvent> }> = ({ event }) => {
+const Seo: FC<{ event: ClubEvent }> = ({ event }) => {
   const thumbSrc = src(event.thumb);
 
   const dayAfter = new Date(event.date);

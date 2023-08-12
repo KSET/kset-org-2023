@@ -9,7 +9,7 @@ import VariantImage from "~/components/base/image/variant-image";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { type ServerSideProps } from "~/types/server";
-import { type RouterOutputs } from "~/utils/api";
+import { type TrpcResult } from "~/types/trpc";
 import { cn } from "~/utils/class";
 import { src } from "~/utils/kset-image";
 import { api } from "~/utils/queryApi";
@@ -18,7 +18,7 @@ import { trimHtmlToTextOfLength } from "~/utils/string";
 
 import $style from "./index.module.scss";
 
-type NewsItem = NonNullable<RouterOutputs["news"]["getNewsItem"]>;
+type NewsItem = TrpcResult<"news.getNewsItem">;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,

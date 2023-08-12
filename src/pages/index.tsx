@@ -6,11 +6,13 @@ import { type FC, type HTMLProps, type ReactNode, useMemo } from "react";
 import ImageHero from "~/assets/page/index/hero.png";
 import AppImage from "~/components/base/image/app-image";
 import VariantImage from "~/components/base/image/variant-image";
+import { type TrpcResultEntry } from "~/types/trpc";
 import { cn } from "~/utils/class";
-import { api, type RouterOutputs } from "~/utils/queryApi";
+import { api } from "~/utils/queryApi";
+import { trimHtmlToTextOfLength } from "~/utils/string";
 
-type TEventItem = RouterOutputs["events"]["getUpcomingEvents"][number];
-type TNewsItem = RouterOutputs["news"]["getNews"][number];
+type TEventItem = TrpcResultEntry<"events.getUpcomingEvents">;
+type TNewsItem = TrpcResultEntry<"news.getNews">;
 
 const EventItem: FC<HTMLProps<HTMLDivElement> & { item: TEventItem }> = ({
   item,
