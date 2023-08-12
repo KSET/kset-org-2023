@@ -8,27 +8,15 @@ import VariantImage from "~/components/base/image/variant-image";
 import LoadingArea from "~/components/base/loading";
 import { type ServerSideProps } from "~/types/server";
 import { api } from "~/utils/queryApi";
-import { createApi } from "~/utils/serverApi";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
+export const getServerSideProps = (context: GetServerSidePropsContext) => {
   const queryYear = parseInt(String(context.query.year), 10);
-  const helpers = await createApi(context);
   const year = Number.isInteger(queryYear)
     ? Number(queryYear)
     : new Date().getFullYear();
 
-  await Promise.allSettled([
-    helpers.events.getEventsForYear.prefetch({
-      year,
-    }),
-    helpers.events.getYearsWithEvents.prefetch(),
-  ]);
-
   return {
     props: {
-      trpcState: helpers.dehydrate(),
       year,
     },
   };

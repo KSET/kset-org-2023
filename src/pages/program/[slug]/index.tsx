@@ -1,7 +1,9 @@
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { htmlToText } from "html-to-text";
 import { type GetServerSidePropsContext } from "next";
 import Link from "next/link";
-import { NextSeo } from "next-seo";
+import { NextSeo, type NextSeoProps } from "next-seo";
+import { type FC } from "react";
 import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 
 import { Carousel } from "~/components/base/carousel";
@@ -12,7 +14,10 @@ import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { type ServerSideProps } from "~/types/server";
 import { src } from "~/utils/kset-image";
+import { api, type RouterOutputs } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
+
+type ClubEvent = RouterOutputs["events"]["getEventInfo"];
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -27,53 +32,79 @@ export const getServerSideProps = async (
   return {
     notFound: !event,
     props: {
-      event,
+      slug,
+      trpcState: helpers.dehydrate(),
     },
   };
 };
 
 type Props = ServerSideProps<typeof getServerSideProps>;
 
-const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
+const Seo: FC<{ event: NonNullable<ClubEvent> }> = ({ event }) => {
+  const thumbSrc = src(event.thumb);
+
+  const dayAfter = new Date(event.date);
+  dayAfter.setDate(dayAfter.getDate() + 1);
+
+  const config: NextSeoProps = {
+    title: event.title,
+    description: event.description
+      ? htmlToText(event.description, { wordwrap: false }).replace(/\s+/gi, " ")
+      : undefined,
+    openGraph: {
+      type: "article",
+      article: {
+        section: "Program",
+        authors: ["KSET"],
+        expirationTime: dayAfter.toISOString(),
+        tags: event.tags,
+      },
+    },
+  };
+
+  if (event.fbEventId) {
+    config.facebook = {
+      ...config.facebook,
+      appId: event.fbEventId,
+    };
+  }
+
+  if (thumbSrc) {
+    config.openGraph = {
+      ...config.openGraph,
+      images: [{ url: thumbSrc }],
+    };
+  }
+
+  return <NextSeo {...config} />;
+};
+
+const PageProgramItem: NextPageWithLayout<Props> = ({ slug }) => {
+  if (!slug) {
+    return null;
+  }
+
+  const [event] = api.events.getEventInfo.useSuspenseQuery({
+    slug,
+    withImages: true,
+  });
+
   if (!event) {
     return null;
   }
 
-  const date = new Date(event.date);
-  const time = event.time ? new Date(event.time) : null;
   const thumbSrc = src(event.thumb);
 
   return (
     <>
-      <NextSeo
-        description={event.description}
-        title={event.title}
-        facebook={
-          event.fbEventId
-            ? {
-                appId: event.fbEventId,
-              }
-            : undefined
-        }
-        openGraph={
-          thumbSrc
-            ? {
-                images: [
-                  {
-                    url: thumbSrc,
-                  },
-                ],
-              }
-            : undefined
-        }
-      />
+      <Seo event={event} />
       <div className="container mb-6">
         <Link
           className="flex items-center gap-1 font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0"
           href={{
             pathname: "/program",
             query: {
-              year: date.getFullYear(),
+              year: event.date.getFullYear(),
             },
             hash: `#event_${event.slug!}`,
           }}
@@ -96,8 +127,8 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
 
         <div className="clear-both w-full bg-off-black py-4 text-white br:float-none br:clear-none br:mb-0 br:w-auto br:pt-0">
           <div className="container">
-            <time dateTime={event.date}>
-              {date.toLocaleDateString("hr-HR", {
+            <time dateTime={event.date.toISOString()}>
+              {event.date.toLocaleDateString("hr-HR", {
                 year: "numeric",
                 month: "numeric",
                 day: "numeric",
@@ -111,9 +142,9 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
                 <span>{event.tags.join(", ")}</span>
               ) : null}
               {event.price ? <span>{event.price}</span> : null}
-              {time ? (
+              {event.time ? (
                 <span>
-                  {time.toLocaleTimeString("hr-HR", {
+                  {event.time.toLocaleTimeString("hr-HR", {
                     hour: "numeric",
                     minute: "numeric",
                   })}
@@ -136,7 +167,7 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ event }) => {
 
         <ProgramContents
           className="container clear-both mx-auto pb-14 pt-10 max-br:clear-both br:max-w-[55vw] br:px-0 br:text-lg"
-          html={event.content}
+          html={(event.description ?? "") + (event.content ?? "")}
         />
 
         {event.gallery ? (

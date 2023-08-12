@@ -1,8 +1,8 @@
-import { htmlToText } from "html-to-text";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import { type Assign } from "~/types/object";
 import { utcDate } from "~/utils/date";
 import { dbFieldsOfModel, dbModelFor } from "~/utils/prisma";
 
@@ -75,22 +75,16 @@ export const eventsRouter = createTRPCRouter({
         });
       }
 
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      const description = htmlToText(event.description || event.content || "", {
-        wordwrap: false,
-      })
-        // Replace multiple whitespace (space, newline, etc.) with a single space
-        .replace(/\s+/g, " ")
-        // Trim string to 200 characters and add ellipsis
-        .replace(/^(.{200}[^\s]*).*/, "$1…");
+      const evt = event as Assign<
+        typeof event,
+        {
+          gallery: typeof gallery;
+        }
+      >;
 
-      return {
-        ...event,
-        date: event.date.toISOString(),
-        time: event.time?.toISOString() ?? null,
-        description,
-        gallery,
-      };
+      evt.gallery = gallery;
+
+      return evt;
     }),
 
   getEventsForYear: publicProcedure

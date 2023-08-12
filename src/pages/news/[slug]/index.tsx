@@ -1,83 +1,98 @@
+import { htmlToText } from "html-to-text";
 import { type GetServerSidePropsContext } from "next";
 import Link from "next/link";
-import { NextSeo } from "next-seo";
+import { NextSeo, type NextSeoProps } from "next-seo";
+import { type FC } from "react";
 import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 
 import VariantImage from "~/components/base/image/variant-image";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { type ServerSideProps } from "~/types/server";
-import { type Maybe } from "~/types/util";
 import { type RouterOutputs } from "~/utils/api";
 import { cn } from "~/utils/class";
 import { src } from "~/utils/kset-image";
+import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
+import { trimHtmlToTextOfLength } from "~/utils/string";
 
 import $style from "./index.module.scss";
 
 type NewsItem = NonNullable<RouterOutputs["news"]["getNewsItem"]>;
-type NewsItemFixed = NonNullable<ReturnType<typeof fixNewsItem>>;
-
-const fixNewsItem = (newsItem: Maybe<NewsItem>) => {
-  if (!newsItem) {
-    return null;
-  }
-
-  return {
-    ...newsItem,
-    createdAt: newsItem.createdAt.toISOString(),
-    expiresAt: newsItem.expiresAt?.toISOString() ?? null,
-  };
-};
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const helpers = await createApi(context);
   const slug = context.params!.slug! as string;
-  const [newsItem, recentNews] = await Promise.all([
+  const [newsItem, _recentNews] = await Promise.allSettled([
     helpers.news.getNewsItem.fetch({
       slug,
     }),
-    helpers.news.getNews.fetch({
+    helpers.news.getNews.prefetch({
       count: 3,
     }),
   ] as const);
 
   return {
-    notFound: !newsItem,
+    notFound: newsItem.status !== "fulfilled" || newsItem.value === null,
     props: {
-      newsItem: fixNewsItem(newsItem),
-      recentNews: recentNews.map(fixNewsItem),
+      slug,
+      trpcState: helpers.dehydrate(),
     },
   };
 };
 
 type Props = ServerSideProps<typeof getServerSideProps>;
 
-// quick and dirty html stripping
-const dirtyStripHtml = (html: Maybe<string>) => html?.replace(/<[^>]+>/g, "");
+const Seo: FC<{ newsItem: NewsItem }> = ({ newsItem }) => {
+  const thumbSrc = src(newsItem.thumb);
 
-const trimToLength = (str: Maybe<string>, length: number) => {
-  if (!str) {
-    return undefined;
+  const config: NextSeoProps = {
+    title: newsItem.subject,
+    description: newsItem.description
+      ? htmlToText(newsItem.description, { wordwrap: false }).replace(
+          /\s+/gi,
+          " ",
+        )
+      : undefined,
+    openGraph: {
+      type: "article",
+      article: {
+        section: "News",
+        authors: ["KSET"],
+        publishedTime: newsItem.createdAt.toISOString(),
+        expirationTime: newsItem.expiresAt?.toISOString(),
+      },
+    },
+  };
+
+  if (thumbSrc) {
+    config.openGraph = {
+      ...config.openGraph,
+      images: [
+        {
+          url: thumbSrc,
+        },
+      ],
+    };
   }
 
-  if (str.length <= length) {
-    return str;
+  return <NextSeo {...config} />;
+};
+
+const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
+  if (!slug) {
+    return null;
   }
 
-  return `${str.slice(0, length - 1)}…`;
-};
+  const [newsItem] = api.news.getNewsItem.useSuspenseQuery({
+    slug,
+  });
 
-const getNewsDescription = (newsItem: Maybe<NewsItem | NewsItemFixed>) => {
-  const content = dirtyStripHtml(newsItem?.description ?? newsItem?.content);
-
-  return trimToLength(content, 250);
-};
-
-const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
-  const description = getNewsDescription(newsItem);
+  const [recentNews] = api.news.getNews.useSuspenseQuery({
+    count: 3,
+  });
 
   if (!newsItem) {
     return null;
@@ -88,21 +103,8 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
 
   return (
     <>
-      <NextSeo
-        description={description}
-        title={newsItem.subject}
-        openGraph={
-          thumbSrc
-            ? {
-                images: [
-                  {
-                    url: thumbSrc,
-                  },
-                ],
-              }
-            : undefined
-        }
-      />
+      <Seo newsItem={newsItem} />
+
       <div className="container mt-8 grid-cols-[1fr,4fr,1fr] justify-items-center tracking-wide br:mt-32 br:grid">
         <Link
           className="flex items-center gap-1 self-baseline justify-self-start font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0 max-br:mb-4"
@@ -165,8 +167,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
         </h2>
 
         <div className="mt-8 grid grid-cols-1 items-baseline gap-8 br:grid-cols-3">
-          {recentNews?.filter(Boolean).map((newsItem) => {
-            const date = new Date(newsItem.createdAt);
+          {recentNews.filter(Boolean).map((newsItem) => {
             const thumbSrc = src(newsItem.thumb);
 
             return (
@@ -192,8 +193,8 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
                   <div className="mb-2 mt-5 text-sm tracking-widest">
                     <span className="text-primary">Ligma</span>
                     <span className="mx-3 opacity-30">&mdash;</span>
-                    <time dateTime={newsItem.createdAt}>
-                      {date.toLocaleDateString("hr-HR")}
+                    <time dateTime={newsItem.createdAt.toISOString()}>
+                      {newsItem.createdAt.toLocaleDateString("hr-HR")}
                     </time>
                   </div>
 
@@ -202,7 +203,10 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ newsItem, recentNews }) => {
                   </h4>
 
                   <p className="mt-2 line-clamp-3 tracking-wide opacity-60">
-                    {getNewsDescription(newsItem)}
+                    {trimHtmlToTextOfLength(
+                      newsItem.description ?? newsItem.content,
+                      250,
+                    )}
                   </p>
                 </Link>
               </article>

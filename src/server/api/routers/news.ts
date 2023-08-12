@@ -1,4 +1,3 @@
-import { htmlToText } from "html-to-text";
 import { z } from "zod";
 
 import { prisma } from "~/server/db";
@@ -30,11 +29,6 @@ export const newsRouter = createTRPCRouter({
       });
 
       return news.map((x) => {
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        x.description = htmlToText(x.description || x.content || "", {
-          wordwrap: false,
-        });
-
         x.content =
           x.content?.replaceAll(
             "../../../../media",

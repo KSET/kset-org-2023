@@ -103,7 +103,7 @@ const NewsItem: FC<HTMLProps<HTMLDivElement> & { item: TNewsItem }> = ({
             {item.subject}
           </h3>
           <p className="mt-2 line-clamp-4 leading-5 tracking-wider opacity-70">
-            {item.description}
+            {trimHtmlToTextOfLength(item.description ?? item.content, 250)}
           </p>
         </div>
       </article>

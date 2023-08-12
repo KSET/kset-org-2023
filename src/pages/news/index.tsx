@@ -10,27 +10,16 @@ import { type ServerSideProps } from "~/types/server";
 import { cn } from "~/utils/class";
 import { src } from "~/utils/kset-image";
 import { api } from "~/utils/queryApi";
-import { createApi } from "~/utils/serverApi";
+import { trimHtmlToTextOfLength } from "~/utils/string";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
+export const getServerSideProps = (context: GetServerSidePropsContext) => {
   const queryYear = parseInt(String(context.query.year), 10);
-  const helpers = await createApi(context);
   const year = Number.isInteger(queryYear)
     ? Number(queryYear)
     : new Date().getFullYear();
 
-  await Promise.allSettled([
-    helpers.news.getNewsForYear.prefetch({
-      year,
-    }),
-    helpers.news.getYearsWithNews.prefetch(),
-  ]);
-
   return {
     props: {
-      trpcState: helpers.dehydrate(),
       year,
     },
   };
@@ -104,12 +93,12 @@ const NewsList: FC<{
               {firstItem.subject}
             </h2>
 
-            <div
-              dangerouslySetInnerHTML={{
-                __html: firstItem.description ?? "",
-              }}
-              className="mt-4 text-lg tracking-wide opacity-60"
-            />
+            <div className="mt-4 text-lg tracking-wide opacity-60">
+              {trimHtmlToTextOfLength(
+                firstItem.description ?? firstItem.content,
+                250,
+              )}
+            </div>
           </div>
         </Link>
       </article>
@@ -153,12 +142,12 @@ const NewsList: FC<{
                   {newsItem.subject}
                 </h4>
 
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: newsItem.description ?? "",
-                  }}
-                  className="mt-2 line-clamp-3 tracking-wide opacity-60"
-                />
+                <div className="mt-2 line-clamp-3 tracking-wide opacity-60">
+                  {trimHtmlToTextOfLength(
+                    newsItem.description ?? newsItem.content,
+                    250,
+                  )}
+                </div>
               </Link>
             </article>
           );
