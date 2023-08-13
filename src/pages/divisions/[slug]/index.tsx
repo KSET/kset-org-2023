@@ -43,9 +43,14 @@ export const getServerSideProps = async (
 type Props = ServerSideProps<typeof getServerSideProps>;
 
 const PageDivisionSpecificHome: NextPage<Props> = (props) => {
-  const [division] = api.divisions.getDivision.useSuspenseQuery({
-    slug: props.slug ?? "",
-  });
+  const [division] = api.divisions.getDivision.useSuspenseQuery(
+    {
+      slug: props.slug ?? "",
+    },
+    {
+      cacheTime: 60 * 60 * 1000,
+    },
+  );
 
   if (!props.slug || !division) {
     return null;

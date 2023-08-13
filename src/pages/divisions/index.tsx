@@ -1,4 +1,4 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
+import { type NextPage } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 import {
@@ -10,10 +10,8 @@ import {
 import { RxArrowRight as IconArrowRight } from "react-icons/rx";
 
 import AppImage from "~/components/base/image/app-image";
-import { type ServerSideProps } from "~/types/server";
 import { cn } from "~/utils/class";
 import { api } from "~/utils/queryApi";
-import { createApi } from "~/utils/serverApi";
 
 const SidebarCard: FC<
   PropsWithChildren<
@@ -34,24 +32,10 @@ const SidebarCard: FC<
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const helpers = await createApi(context);
-
-  await helpers.divisions.getDivisions.prefetch();
-
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  };
-};
-
-type Props = ServerSideProps<typeof getServerSideProps>;
-
-const PageDivisionsHome: NextPage<Props> = () => {
-  const [divisions] = api.divisions.getDivisions.useSuspenseQuery();
+const PageDivisionsHome: NextPage = () => {
+  const [divisions] = api.divisions.getDivisions.useSuspenseQuery(undefined, {
+    cacheTime: 60 * 60 * 1000,
+  });
 
   return (
     <>
