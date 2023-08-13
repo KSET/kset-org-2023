@@ -1,7 +1,13 @@
 import { useIsFetching } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+import { type RouterEvent, useRouter } from "next/router";
 import NProgress from "nprogress";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
+
+import { useReducer } from "./reducer";
+
+const LOADING_PROGRESS_START_DELAY = 150;
+
+type ClearTimeoutParam = Parameters<typeof clearTimeout>[0];
 
 export const useLoadingProgress = ({
   onStart,
@@ -13,35 +19,94 @@ export const useLoadingProgress = ({
   const router = useRouter();
   const routerEvents = router.events as typeof router.events | undefined;
 
-  type RouterEvents = Parameters<NonNullable<typeof routerEvents>["on"]>[0];
+  const [loadingState, setLoadingState] = useReducer(
+    (
+      prevState,
+      action:
+        | {
+            type: "start";
+            timeout?: ClearTimeoutParam;
+          }
+        | {
+            type: "done";
+          },
+    ) => {
+      clearTimeout(prevState.timeout);
 
-  const loaderStart = useCallback(() => {
-    if (NProgress.isStarted()) {
+      switch (action.type) {
+        case "start": {
+          return {
+            isLoading: true,
+            timeout: action.timeout,
+          } as const;
+        }
+        case "done": {
+          return {
+            isLoading: false,
+            timeout: undefined,
+          } as const;
+        }
+      }
+    },
+    {
+      isLoading: false,
+      timeout: undefined,
+    } as
+      | {
+          isLoading: false;
+          timeout: undefined;
+        }
+      | {
+          isLoading: true;
+          timeout?: ClearTimeoutParam;
+        },
+  );
+
+  useEffect(() => {
+    if (!loadingState.isLoading) {
+      setLoadingState({ type: "done" });
+
+      onDone?.();
+      if (NProgress.isStarted()) {
+        NProgress.done(true);
+      }
       return;
     }
 
-    onStart?.();
-    NProgress.start();
-  }, [onStart]);
+    const timeout = setTimeout(() => {
+      if (NProgress.isStarted()) {
+        return;
+      }
 
-  const loaderDone = useCallback(() => {
-    onDone?.();
-    NProgress.done(true);
-  }, [onDone]);
+      onStart?.();
+      NProgress.start();
+    }, LOADING_PROGRESS_START_DELAY);
+
+    setLoadingState({ type: "start", timeout });
+
+    return () => {
+      setLoadingState({ type: "done" });
+    };
+  }, [loadingState.isLoading, onDone, onStart]);
 
   useEffect(() => {
     NProgress.configure({
       trickle: true,
       trickleSpeed: 100,
+      minimum: 0.2,
     });
   }, []);
 
-  const routerEventHandlers: [() => void, RouterEvents[]][] = useMemo(
-    () => [
-      [loaderStart, ["routeChangeStart"]],
-      [loaderDone, ["routeChangeComplete", "routeChangeError"]],
-    ],
-    [loaderStart, loaderDone],
+  const routerEventHandlers = useMemo(
+    () =>
+      [
+        [() => setLoadingState({ type: "start" }), ["routeChangeStart"]],
+        [
+          () => setLoadingState({ type: "done" }),
+          ["routeChangeComplete", "routeChangeError"],
+        ],
+      ] satisfies [() => void, RouterEvent[]][],
+    [],
   );
 
   useEffect(() => {
@@ -62,13 +127,13 @@ export const useLoadingProgress = ({
         }
       }
     };
-  }, [loaderStart, loaderDone, routerEvents, routerEventHandlers]);
+  }, [routerEvents, routerEventHandlers]);
 
   useEffect(() => {
     if (isFetching > 0) {
-      loaderStart();
+      setLoadingState({ type: "start" });
     } else {
-      loaderDone();
+      setLoadingState({ type: "done" });
     }
-  }, [loaderStart, loaderDone, isFetching]);
+  }, [isFetching]);
 };
