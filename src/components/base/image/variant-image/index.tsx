@@ -1,7 +1,11 @@
 import { type FC } from "react";
 
 import { cn } from "~/utils/class";
-import { src as imgSrc, urlVariants } from "~/utils/kset-image";
+import {
+  DefaultUrlVariants,
+  src as imgSrc,
+  urlVariant,
+} from "~/utils/kset-image";
 
 import AppImage, { type AppImageProps } from "../app-image";
 
@@ -27,7 +31,7 @@ const VariantImage: FC<
       aspect={{
         ratio,
         style: {
-          backgroundImage: urlVariants(src),
+          backgroundImage: urlVariant(src, DefaultUrlVariants.Thumb),
           ...aspect?.style,
         },
         ...aspect,

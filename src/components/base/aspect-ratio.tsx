@@ -17,8 +17,8 @@ const AspectRatio: FC<AspectRatioProps> = (props) => {
     <div
       className="relative w-full"
       style={{
-        ...props.style,
         paddingBottom: `${100 / ratio}%`,
+        aspectRatio: ratio,
       }}
     >
       <div
