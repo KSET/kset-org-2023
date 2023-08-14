@@ -46,7 +46,7 @@ export const srcVariant = <
 
 export const urlVariant = <
   TSrc extends Src,
-  TVariant extends string | null,
+  TVariant extends DefaultUrlVariants | string | null,
   TRet extends CssUrl<TSrc>,
 >(
   thumbSrc: TSrc,
@@ -59,9 +59,15 @@ export const urlVariant = <
   return `url(${srcVariant(thumbSrc, variant)})` as const;
 };
 
+export enum DefaultUrlVariants {
+  Thumb = "fb_thumb",
+  Medium = "medium",
+  Original = "",
+}
+
 export const urlVariants = <
   TSrc extends Src,
-  TVariant extends string | null,
+  TVariant extends DefaultUrlVariants | string | null,
   TRet extends TSrc extends string ? string : null,
 >(
   thumbSrc: TSrc,
