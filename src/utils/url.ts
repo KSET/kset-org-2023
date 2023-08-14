@@ -14,6 +14,12 @@ export const getAppUrl = () => {
   if (process.env.INTERNAL_ADDRESS) {
     return `http://${process.env.INTERNAL_ADDRESS}:${process.env.PORT ?? 3000}`;
   }
+  if (process.env.RENDER_INTERNAL_HOSTNAME) {
+    // reference for render.com
+    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${
+      process.env.PORT ?? 3000
+    }`;
+  }
   if (process.env.APP_URL) {
     return process.env.APP_URL;
   }
