@@ -14,7 +14,7 @@ import {
   RiArrowRightSLine as IconChevronRight,
 } from "react-icons/ri";
 
-import { type Dict } from "~/types/object";
+import { type Assign, type Dict } from "~/types/object";
 import { cn } from "~/utils/class";
 
 const CarouselItem: FC<PropsWithChildren> = ({ children }) => {
@@ -54,14 +54,17 @@ const CarouselArrow: FC<{
   );
 };
 
-export const Carousel: FC<
-  PropsWithChildren<
-    HTMLProps<HTMLDivElement> & {
-      displayed?: number;
-      options?: EmblaOptionsType;
-    }
-  >
-> & {
+export type CarouselPropsStrict = {
+  displayed?: number;
+  options?: EmblaOptionsType;
+};
+
+export type CarouselProps = Assign<
+  PropsWithChildren<HTMLProps<HTMLDivElement>>,
+  CarouselPropsStrict
+>;
+
+export const Carousel: FC<CarouselProps> & {
   Item: typeof CarouselItem;
 } = ({ children, displayed, options: emblaOptions, ...divProps }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({

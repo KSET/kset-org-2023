@@ -1,4 +1,3 @@
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { htmlToText } from "html-to-text";
 import { type GetServerSidePropsContext } from "next";
 import Link from "next/link";
@@ -6,7 +5,7 @@ import { NextSeo, type NextSeoProps } from "next-seo";
 import { type FC } from "react";
 import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 
-import { Carousel } from "~/components/base/carousel";
+import { ImageCarousel } from "~/components/base/carousel/ImageCarousel";
 import VariantImage from "~/components/base/image/variant-image";
 import { ProgramContents } from "~/components/program/program-contents";
 import { SeparatedItems } from "~/components/util/separated-items";
@@ -184,26 +183,14 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ slug }) => {
               ) : null}
               <div className="mt-6">
                 <div className="overflow-hidden">
-                  <Carousel
-                    className="max-br:[--slide-size-override:100%]"
-                    displayed={3}
-                  >
-                    {event.gallery.galleryImageAlbum.map(({ image }) => {
-                      return (
-                        <Carousel.Item key={image.id}>
-                          <AspectRatio ratio={1.2}>
-                            <img
-                              alt={image.title}
-                              className="h-full w-full object-cover"
-                              decoding="async"
-                              loading="lazy"
-                              src={src(image.uploadPath)}
-                            />
-                          </AspectRatio>
-                        </Carousel.Item>
-                      );
+                  <ImageCarousel
+                    images={event.gallery.galleryImageAlbum.map(({ image }) => {
+                      return {
+                        alt: image.title,
+                        src: src(image.uploadPath),
+                      };
                     })}
-                  </Carousel>
+                  />
                 </div>
               </div>
             </div>
