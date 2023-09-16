@@ -57,15 +57,15 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
         Sekcije
       </h1>
 
-      <div className="grid grid-cols-[minmax(0,2fr),minmax(0,1fr)] items-baseline gap-x-12">
-        <div className="flex flex-col divide-y">
+      <div className="grid items-baseline gap-x-12 py-6 max-br:gap-y-8 br:grid-cols-[minmax(0,2fr),minmax(0,1fr)]">
+        <div className="order-2 flex flex-col divide-y br:order-1">
           {divisions.map((division) => {
             return (
               <div
                 key={division.id}
-                className="grid grid-cols-[auto,minmax(0,1fr)] gap-9 border-white/20 py-6"
+                className="grid gap-4 border-white/20 py-6 first:pt-0 last:pb-0 br:grid-cols-[auto,minmax(0,1fr)] br:gap-9"
               >
-                <div className="aspect-square w-32 overflow-hidden rounded-full">
+                <div className="aspect-square overflow-hidden rounded-full br:w-32">
                   <AppImage
                     alt={`${division.name} logo`}
                     mode="cover"
@@ -84,7 +84,7 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
                   <p className="mt-1">{division.description}</p>
 
                   <Link
-                    className="mt-2 flex items-center gap-[.25em] uppercase no-underline"
+                    className="mt-2 flex uppercase no-underline"
                     href={{
                       pathname: "/divisions/[slug]",
                       query: {
@@ -92,7 +92,9 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
                       },
                     }}
                   >
-                    Saznaj više <IconArrowRight />
+                    <span className="flex items-center gap-[.25em] max-br:ml-auto">
+                      Saznaj više <IconArrowRight />
+                    </span>
                   </Link>
                 </div>
               </div>
@@ -100,7 +102,7 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
           })}
         </div>
 
-        <div className="flex flex-col items-baseline gap-8 self-stretch">
+        <div className="order-1 flex flex-col items-baseline gap-8 self-stretch br:order-2">
           <SidebarCard
             text="Javi se na mail bla bla bla, consectetur adipiscing elit. Duis in"
             title="Kako se učlaniti?"
@@ -124,7 +126,7 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
             </p>
 
             <a
-              className="mt-8 inline-block bg-primary px-7 py-3 font-bold uppercase tracking-wide text-black no-underline"
+              className="mt-8 inline-block bg-primary px-7 py-3 text-center font-bold uppercase tracking-wide text-black no-underline"
               href="#"
             >
               Otkrij koja si sekcija
