@@ -76,15 +76,15 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
                   />
                 </div>
 
-                <div>
+                <div className="flex flex-col">
                   <h1 className="text-lg font-bold tracking-widest">
                     {division.name}
                   </h1>
 
-                  <p className="mt-1">{division.description}</p>
+                  <p className="mb-2 mt-1">{division.description}</p>
 
                   <Link
-                    className="mt-2 flex uppercase no-underline"
+                    className="mt-auto flex uppercase no-underline"
                     href={{
                       pathname: "/divisions/[slug]",
                       query: {

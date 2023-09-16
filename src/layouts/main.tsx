@@ -10,10 +10,12 @@ export const MainLayout: FC<PropsWithChildren<{ className?: string }>> = ({
 }) => {
   return (
     <>
-      <div className={cn("container flex flex-1 flex-col pb-20", className)}>
-        <BaseHeader />
-        <main className="overflow-hidden">{children}</main>
+      <BaseHeader className="container" />
+
+      <div className={cn("flex flex-1 flex-col", className)}>
+        <main>{children}</main>
       </div>
+
       <BaseFooter />
     </>
   );

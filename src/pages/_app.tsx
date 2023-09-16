@@ -73,7 +73,7 @@ const MyApp: AppType<{
           {getLayout ? (
             getLayout(<Component {...pageProps} />)
           ) : (
-            <MainLayout className={fontUi.className}>
+            <MainLayout className={`${fontUi.className} container mb-20`}>
               <Component {...pageProps} />
             </MainLayout>
           )}

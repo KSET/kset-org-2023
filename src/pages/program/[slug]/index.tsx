@@ -214,10 +214,6 @@ const PageProgramItem: NextPageWithLayout<Props> = ({ slug }) => {
   );
 };
 
-PageProgramItem.getLayout = (page) => (
-  <MainLayout className="max-w-[initial] !p-0 [&>header]:container">
-    {page}
-  </MainLayout>
-);
+PageProgramItem.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default PageProgramItem;

@@ -1,14 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type FC } from "react";
+import { type FC, type HTMLProps } from "react";
 import { RiArrowRightSLine as IconChevronRight } from "react-icons/ri";
 
 import KsetLogo from "~/assets/common/kset-logo.png";
 import { cn } from "~/utils/class";
 
-export const BaseFooter: FC = () => {
+export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
   return (
-    <footer className="pb-safe mt-auto overflow-hidden bg-secondary">
+    <footer
+      {...props}
+      className={cn(
+        "pb-safe mt-auto overflow-hidden bg-secondary",
+        props.className,
+      )}
+    >
       <div className="container flex flex-wrap-reverse gap-8 pb-20 pt-8 max-br:pb-8">
         <div className="flex-auto">
           <Link href="/">
