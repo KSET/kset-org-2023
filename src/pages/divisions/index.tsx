@@ -1,5 +1,4 @@
 import { type GetStaticPropsContext, type NextPage } from "next";
-import Link from "next/link";
 import { NextSeo } from "next-seo";
 import {
   type FC,
@@ -7,9 +6,9 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from "react";
-import { RxArrowRight as IconArrowRight } from "react-icons/rx";
 
 import AppImage from "~/components/base/image/app-image";
+import { LinkWithArrow } from "~/components/base/link/LinkWithIcon";
 import { type ServerSideProps } from "~/types/server";
 import { cn } from "~/utils/class";
 import { createApi } from "~/utils/serverApi";
@@ -83,19 +82,12 @@ const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
 
                   <p className="mb-2 mt-1">{division.description}</p>
 
-                  <Link
-                    className="mt-auto flex uppercase no-underline"
-                    href={{
-                      pathname: "/divisions/[slug]",
-                      query: {
-                        slug: division.slug,
-                      },
-                    }}
+                  <LinkWithArrow
+                    className="mt-auto"
+                    href={`/divisions/${division.slug}`}
                   >
-                    <span className="flex items-center gap-[.25em] max-br:ml-auto">
-                      Saznaj više <IconArrowRight />
-                    </span>
-                  </Link>
+                    Saznaj više
+                  </LinkWithArrow>
                 </div>
               </div>
             );

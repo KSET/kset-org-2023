@@ -5,15 +5,13 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from "react";
-import {
-  RxArrowRight as IconArrowRight,
-  RxDownload as IconDownload,
-} from "react-icons/rx";
+import { RxDownload as IconDownload } from "react-icons/rx";
 
 import {
   ImageCarousel,
   type ImageCarouselPropsStrict,
 } from "~/components/base/carousel/ImageCarousel";
+import { LinkWithArrow } from "~/components/base/link/LinkWithIcon";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
 import { cn } from "~/utils/class";
@@ -137,33 +135,27 @@ const PageAboutHome: NextPageWithLayout = () => {
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus. Vestibulum ante ipsum primis in faucibus orci"
                 title="Kako se učlaniti?"
               >
-                <a className="mt-12 flex uppercase no-underline" href="#">
-                  <span className="flex items-center gap-[.25em] max-br:ml-auto">
-                    Saznaj više <IconArrowRight />
-                  </span>
-                </a>
+                <LinkWithArrow className="mt-12 uppercase" href="#">
+                  Saznaj više
+                </LinkWithArrow>
               </SidebarCard>
 
               <SidebarCard
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus. Vestibulum ante ipsum primis in faucibus orci"
                 title="Projekti"
               >
-                <a className="mt-12 flex uppercase no-underline" href="#">
-                  <span className="flex items-center gap-[.25em] max-br:ml-auto">
-                    Saznaj više <IconArrowRight />
-                  </span>
-                </a>
+                <LinkWithArrow className="mt-12 uppercase" href="#">
+                  Saznaj više
+                </LinkWithArrow>
               </SidebarCard>
 
               <SidebarCard
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus. Vestibulum ante ipsum primis in faucibus orci"
                 title="Alumni"
               >
-                <a className="mt-12 flex uppercase no-underline" href="#">
-                  <span className="flex items-center gap-[.25em] max-br:ml-auto">
-                    Saznaj više <IconArrowRight />
-                  </span>
-                </a>
+                <LinkWithArrow className="mt-12 uppercase" href="#">
+                  Saznaj više
+                </LinkWithArrow>
               </SidebarCard>
 
               <SidebarCard title="Društvene mreže">
