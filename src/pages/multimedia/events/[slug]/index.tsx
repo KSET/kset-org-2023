@@ -1,5 +1,6 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import Link from "next/link";
+import { NextSeo } from "next-seo";
 
 import VariantImage from "~/components/base/image/variant-image";
 import { type ServerSideProps } from "~/types/server";
@@ -44,6 +45,12 @@ export const getServerSideProps = async (
 
 type Props = ServerSideProps<typeof getServerSideProps>;
 
+const EventDateFormatter = new Intl.DateTimeFormat("hr-HR", {
+  day: "numeric",
+  month: "numeric",
+  year: "numeric",
+});
+
 const PageGallery: NextPage<Props> = ({ slug }) => {
   if (!slug) {
     return null;
@@ -59,6 +66,12 @@ const PageGallery: NextPage<Props> = ({ slug }) => {
 
   return (
     <>
+      <NextSeo
+        description={gallery.description}
+        title={`Galerija - ${EventDateFormatter.format(
+          gallery.dateOfEvent,
+        )} - ${gallery.title}`}
+      />
       <Link
         href={{
           pathname: "/multimedia/events",
