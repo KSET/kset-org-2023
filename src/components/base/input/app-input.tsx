@@ -36,6 +36,31 @@ export const AppInput = <TValue extends unknown>(
   );
 };
 
+export const AppTextarea = (
+  props: HTMLProps<HTMLDivElement> & {
+    label?: string;
+    name: string;
+    initialValue?: string;
+    iconBefore?: ReactNode;
+    iconAfter?: ReactNode;
+    onChange?: (val: string) => void | never;
+  },
+) => {
+  return (
+    <AppInputBase
+      {...props}
+      input={
+        <textarea
+          className="flex-1 bg-transparent p-3 pr-11 leading-none text-inherit"
+          placeholder={props.placeholder}
+        >
+          {props.value}
+        </textarea>
+      }
+    />
+  );
+};
+
 export const AppSelect = ({
   options,
   children,
