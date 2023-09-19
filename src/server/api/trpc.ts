@@ -55,12 +55,18 @@ export const createTRPCContext = (opts: CreateNextContextOptions) =>
   createServerTRPCContext(opts);
 
 export const createServerTRPCContext = async (
-  opts: Pick<GetServerSidePropsContext, "req" | "res">,
+  opts:
+    | Pick<GetServerSidePropsContext, "req" | "res">
+    | Pick<GetServerSidePropsContext, never>,
 ) => {
-  const { req, res } = opts;
+  let user = null;
+  if ("req" in opts && "res" in opts) {
+    const { req, res } = opts;
 
-  // Get the session from the server using the getServerSession wrapper function
-  const session = await getServerAuthSession({ req, res });
+    // Get the session from the server using the getServerSession wrapper function
+    const session = await getServerAuthSession({ req, res });
+    user = session?.user;
+  }
 
   return createInnerTRPCContext({
     session,
