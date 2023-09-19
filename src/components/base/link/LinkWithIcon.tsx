@@ -13,14 +13,18 @@ export type LinkWithIconPropsStrict = {
   iconAfter?: ReactNode;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-export const LinkWithIcon = <TRouteType extends unknown>({
+export const LinkWithIcon = ({
   children,
   iconBefore,
   iconAfter,
   ...rest
 }: PropsWithChildren<
-  Assign<LinkProps<TRouteType>, LinkWithIconPropsStrict>
+  Assign<
+    LinkProps,
+    LinkWithIconPropsStrict & {
+      className?: string;
+    }
+  >
 >) => {
   return (
     <Link
@@ -43,12 +47,17 @@ export type LinkWithArrowPropsStrict = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-export const LinkWithArrow = <TRouteType extends unknown>({
+export const LinkWithArrow = ({
   children,
   arrowPosition = "after",
   ...rest
 }: PropsWithChildren<
-  Assign<LinkProps<TRouteType>, LinkWithArrowPropsStrict>
+  Assign<
+    LinkProps,
+    LinkWithArrowPropsStrict & {
+      className?: string;
+    }
+  >
 >) => {
   return (
     <LinkWithIcon
