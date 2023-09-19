@@ -218,10 +218,6 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
   );
 };
 
-PageNewsItem.getLayout = (page) => (
-  <MainLayout className="max-w-[initial] !p-0 [&>header]:container">
-    {page}
-  </MainLayout>
-);
+PageNewsItem.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default PageNewsItem;

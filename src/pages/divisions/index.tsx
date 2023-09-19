@@ -1,5 +1,4 @@
-import { type NextPage } from "next";
-import Link from "next/link";
+import { type GetStaticPropsContext, type NextPage } from "next";
 import { NextSeo } from "next-seo";
 import {
   type FC,
@@ -7,11 +6,12 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from "react";
-import { RxArrowRight as IconArrowRight } from "react-icons/rx";
 
 import AppImage from "~/components/base/image/app-image";
+import { LinkWithArrow } from "~/components/base/link/LinkWithIcon";
+import { type ServerSideProps } from "~/types/server";
 import { cn } from "~/utils/class";
-import { api } from "~/utils/queryApi";
+import { createApi } from "~/utils/serverApi";
 
 const SidebarCard: FC<
   PropsWithChildren<
@@ -32,10 +32,22 @@ const SidebarCard: FC<
   );
 };
 
-const PageDivisionsHome: NextPage = () => {
-  const [divisions] = api.divisions.getDivisions.useSuspenseQuery(undefined, {
-    cacheTime: 60 * 60 * 1000,
-  });
+export const getStaticProps = async (context: GetStaticPropsContext) => {
+  const helpers = await createApi(context);
+
+  return {
+    props: {
+      divisions: await helpers.divisions.getDivisions.fetch(),
+    },
+  };
+};
+
+type Props = ServerSideProps<typeof getStaticProps>;
+
+const PageDivisionsHome: NextPage<Props> = ({ divisions }) => {
+  if (!divisions) {
+    return null;
+  }
 
   return (
     <>
@@ -44,15 +56,15 @@ const PageDivisionsHome: NextPage = () => {
         Sekcije
       </h1>
 
-      <div className="grid grid-cols-[minmax(0,2fr),minmax(0,1fr)] items-baseline gap-x-12">
-        <div className="flex flex-col divide-y">
+      <div className="grid items-baseline gap-x-12 py-6 max-br:gap-y-8 br:grid-cols-[minmax(0,2fr),minmax(0,1fr)]">
+        <div className="order-2 flex flex-col divide-y br:order-1">
           {divisions.map((division) => {
             return (
               <div
                 key={division.id}
-                className="grid grid-cols-[auto,minmax(0,1fr)] gap-9 border-white/20 py-6"
+                className="grid gap-4 border-white/20 py-6 first:pt-0 last:pb-0 br:grid-cols-[auto,minmax(0,1fr)] br:gap-9"
               >
-                <div className="aspect-square w-32 overflow-hidden rounded-full">
+                <div className="aspect-square overflow-hidden rounded-full br:w-32">
                   <AppImage
                     alt={`${division.name} logo`}
                     mode="cover"
@@ -63,31 +75,26 @@ const PageDivisionsHome: NextPage = () => {
                   />
                 </div>
 
-                <div>
+                <div className="flex flex-col">
                   <h1 className="text-lg font-bold tracking-widest">
                     {division.name}
                   </h1>
 
-                  <p className="mt-1">{division.description}</p>
+                  <p className="mb-2 mt-1">{division.description}</p>
 
-                  <Link
-                    className="mt-2 flex items-center gap-[.25em] uppercase no-underline"
-                    href={{
-                      pathname: "/divisions/[slug]",
-                      query: {
-                        slug: division.slug,
-                      },
-                    }}
+                  <LinkWithArrow
+                    className="mt-auto"
+                    href={`/divisions/${division.slug}`}
                   >
-                    Saznaj više <IconArrowRight />
-                  </Link>
+                    Saznaj više
+                  </LinkWithArrow>
                 </div>
               </div>
             );
           })}
         </div>
 
-        <div className="flex flex-col items-baseline gap-8 self-stretch">
+        <div className="order-1 flex flex-col items-baseline gap-8 self-stretch br:order-2">
           <SidebarCard
             text="Javi se na mail bla bla bla, consectetur adipiscing elit. Duis in"
             title="Kako se učlaniti?"
@@ -111,7 +118,7 @@ const PageDivisionsHome: NextPage = () => {
             </p>
 
             <a
-              className="mt-8 inline-block bg-primary px-7 py-3 font-bold uppercase tracking-wide text-black no-underline"
+              className="mt-8 inline-block bg-primary px-7 py-3 text-center font-bold uppercase tracking-wide text-black no-underline"
               href="#"
             >
               Otkrij koja si sekcija

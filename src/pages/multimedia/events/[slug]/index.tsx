@@ -1,7 +1,10 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
+import Link from "next/link";
+import { NextSeo } from "next-seo";
 
 import VariantImage from "~/components/base/image/variant-image";
 import { type ServerSideProps } from "~/types/server";
+import { src } from "~/utils/kset-image";
 import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
 
@@ -13,28 +16,40 @@ export const getServerSideProps = async (
 
   if (!slug || Array.isArray(slug)) {
     return {
+      notFound: true,
       props: {
-        notFound: true,
-        trpcState: helpers.dehydrate(),
         slug: "",
       },
     };
   }
 
-  await helpers.gallery.getGallery.prefetch({
+  const item = await helpers.gallery.getGallery.fetch({
     slug,
   });
 
+  if (!item) {
+    return {
+      notFound: true,
+      props: {
+        slug,
+      },
+    };
+  }
+
   return {
     props: {
-      notFound: false,
-      trpcState: helpers.dehydrate(),
       slug,
     },
   };
 };
 
 type Props = ServerSideProps<typeof getServerSideProps>;
+
+const EventDateFormatter = new Intl.DateTimeFormat("hr-HR", {
+  day: "numeric",
+  month: "numeric",
+  year: "numeric",
+});
 
 const PageGallery: NextPage<Props> = ({ slug }) => {
   if (!slug) {
@@ -51,6 +66,23 @@ const PageGallery: NextPage<Props> = ({ slug }) => {
 
   return (
     <>
+      <NextSeo
+        description={gallery.description}
+        title={`Galerija - ${EventDateFormatter.format(
+          gallery.dateOfEvent,
+        )} - ${gallery.title}`}
+      />
+      <Link
+        href={{
+          pathname: "/multimedia/events",
+          query: {
+            year: gallery.dateOfEvent.getFullYear(),
+          },
+          hash: `#item__${gallery.slug}`,
+        }}
+      >
+        &larr; Natrag
+      </Link>
       <div>
         <h1 className="text-6xl font-bold tracking-wide">{gallery.title}</h1>
         <h2 className="mt-8 text-xl">
@@ -74,14 +106,20 @@ const PageGallery: NextPage<Props> = ({ slug }) => {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 br:grid-cols-3">
-        {gallery.galleryImageAlbum.map((image) => {
+        {gallery.galleryImageAlbum.map((item) => {
           return (
-            <div key={image.id}>
-              <VariantImage
-                alt={image.image.caption ?? image.image.title}
-                aspectRatio={3 / 2}
-                src={image.image.uploadPath}
-              />
+            <div key={item.id}>
+              <a
+                href={src(item.image.uploadPath)}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <VariantImage
+                  alt={item.image.caption ?? item.image.title}
+                  aspectRatio={3 / 2}
+                  src={item.image.uploadPath}
+                />
+              </a>
             </div>
           );
         })}

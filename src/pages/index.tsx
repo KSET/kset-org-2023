@@ -6,6 +6,8 @@ import { type FC, type HTMLProps, type ReactNode, useMemo } from "react";
 import ImageHero from "~/assets/page/index/hero.png";
 import AppImage from "~/components/base/image/app-image";
 import VariantImage from "~/components/base/image/variant-image";
+import { LinkWithArrow } from "~/components/base/link/LinkWithIcon";
+import { GalleryCard } from "~/components/gallery/GalleryCard";
 import { type TrpcResultEntry } from "~/types/trpc";
 import { cn } from "~/utils/class";
 import { api } from "~/utils/queryApi";
@@ -67,7 +69,7 @@ const SectionUpcomingEvents: FC = () => {
   }
 
   return (
-    <section className="mb-56">
+    <section className="mb-24 br:mb-56">
       <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
         Nadolazeći događaji
       </h2>
@@ -123,14 +125,14 @@ const SectionNews: FC = () => {
         id="news"
       >
         <span className="tracking-[2.4px]">Vijesti</span>
-        <Link
-          className="ml-auto text-base tracking-wider no-underline hover:underline"
+        <LinkWithArrow
+          className="ml-auto text-base tracking-wider"
           href={{
             pathname: "/news",
           }}
         >
-          Vidi vijesti &rarr;
-        </Link>
+          Vidi vijesti
+        </LinkWithArrow>
       </h2>
 
       <div className="mt-9 grid grid-cols-1 gap-8 md:grid-cols-2 br:grid-cols-4">
@@ -246,7 +248,7 @@ const SectionQuiz: FC = () => {
           Pronađi svoju sekciju i postani član KSET-a!
         </h3>
 
-        <p className="mt-4 opacity-80">
+        <p className="mb-6 mt-4 opacity-80">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in
           laoreet lectus. Vestibulum ante ipsum primis in faucibus orci luctus
           et ultrices posuere cubilia curae; Vivamus turpis dui, semper
@@ -254,7 +256,7 @@ const SectionQuiz: FC = () => {
         </p>
 
         <button
-          className="mt-6 bg-primary px-7 py-3 font-bold tracking-wide text-secondary br:mt-auto"
+          className="bg-primary px-7 py-3 font-bold tracking-wide text-secondary br:mt-auto"
           type="button"
         >
           OTKRIJ KOJA SI SEKCIJA
@@ -269,48 +271,29 @@ const SectionGallery: FC = () => {
 
   return (
     <section className="mt-20">
-      <div className="mb-9 flex items-center">
+      <div className="mb-9 flex items-center max-br:flex-col">
         <h2 className="text-3xl font-bold uppercase tracking-widest">
           Fotogalerija
         </h2>
 
-        <a className="ml-auto uppercase no-underline" href="#">
-          Vidi galeriju &rarr;
-        </a>
+        <LinkWithArrow
+          className="ml-auto uppercase no-underline"
+          href="/multimedia"
+        >
+          Vidi galeriju
+        </LinkWithArrow>
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 br:grid-cols-4">
         {gallery.map((item) => (
-          <Link
+          <GalleryCard
             key={item.id}
-            className="text-white no-underline"
-            href={{
-              pathname: "/multimedia/gallery/[slug]",
-              query: {
-                slug: item.slug,
-              },
-            }}
-          >
-            <VariantImage
-              alt={item.title}
-              aspectRatio={271 / 230}
-              mode="cover"
-              src={item.thumb}
-            />
-
-            <div className="mt-5">
-              <div className="text-sm tracking-widest">
-                <time dateTime={item.dateOfEvent.toISOString()}>
-                  {item.dateOfEvent.toLocaleDateString("hr-HR")}
-                </time>
-                <span className="ml-3 mr-5 text-primary">|</span>
-                <span>{item.photographer?.name}</span>
-              </div>
-              <h4 className="mt-2 text-lg font-bold tracking-wide">
-                {item.title}
-              </h4>
-            </div>
-          </Link>
+            date={item.dateOfEvent}
+            photographer={item.photographer?.name}
+            slug={item.slug}
+            thumb={item.thumb}
+            title={item.title}
+          />
         ))}
       </div>
     </section>

@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type FC } from "react";
+import { type FC, type HTMLProps } from "react";
 
 import KsetLogo from "~/assets/common/kset-logo.png";
+import { cn } from "~/utils/class";
 
 import { NavDrawer, type NavItem } from "./components";
 
-export const BaseHeader: FC = () => {
+export const BaseHeader: FC<HTMLProps<HTMLElement>> = (props) => {
   const headerItems = [
     {
       text: "Program",
@@ -35,7 +36,13 @@ export const BaseHeader: FC = () => {
   ] satisfies NavItem[];
 
   return (
-    <header className="relative mb-6 mt-6 flex h-6 transition-[height,margin] br:mb-14 br:mt-12 br:h-8">
+    <header
+      {...props}
+      className={cn(
+        "relative mb-6 mt-6 flex h-6 transition-[height,margin] br:mb-14 br:mt-12 br:h-8",
+        props.className,
+      )}
+    >
       <Link href="/">
         <Image
           priority

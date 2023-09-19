@@ -1,4 +1,8 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
+import {
+  type GetStaticPathsContext,
+  type GetStaticPropsContext,
+  type NextPage,
+} from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
@@ -6,13 +10,26 @@ import { RxArrowLeft as IconArrowLeft } from "react-icons/rx";
 import AppImage from "~/components/base/image/app-image";
 import { type ServerSideProps } from "~/types/server";
 import { cn } from "~/utils/class";
-import { api } from "~/utils/queryApi";
 import { createApi } from "~/utils/serverApi";
 
 import $style from "./index.module.scss";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
+export const getStaticPaths = async (context: GetStaticPathsContext) => {
+  const helpers = await createApi(context);
+  const divisions = await helpers.divisions.getDivisions.fetch();
+
+  return {
+    paths: divisions.map((division) => ({
+      params: {
+        slug: division.slug,
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps = async (
+  context: GetStaticPropsContext<{ slug: string }>,
 ) => {
   const helpers = await createApi(context);
   const slug = context.params?.slug;
@@ -21,38 +38,24 @@ export const getServerSideProps = async (
     return {
       props: {
         notFound: true,
-        trpcState: helpers.dehydrate(),
-        slug: "",
       },
     };
   }
 
-  await helpers.divisions.getDivision.prefetch({
-    slug,
-  });
-
   return {
     props: {
-      notFound: false,
-      trpcState: helpers.dehydrate(),
-      slug,
+      division: await helpers.divisions.getDivision.fetch({
+        slug,
+      }),
     },
+    // revalidate: 60,
   };
 };
 
-type Props = ServerSideProps<typeof getServerSideProps>;
+type Props = ServerSideProps<typeof getStaticProps>;
 
-const PageDivisionSpecificHome: NextPage<Props> = (props) => {
-  const [division] = api.divisions.getDivision.useSuspenseQuery(
-    {
-      slug: props.slug ?? "",
-    },
-    {
-      cacheTime: 60 * 60 * 1000,
-    },
-  );
-
-  if (!props.slug || !division) {
+const PageDivisionSpecificHome: NextPage<Props> = ({ division }) => {
+  if (!division) {
     return null;
   }
 
