@@ -32,7 +32,7 @@ const items = [
 ] satisfies {
   title: string;
   description: string;
-  link: LinkProps<string>["href"];
+  link: LinkProps["href"];
   image: string;
 }[];
 
