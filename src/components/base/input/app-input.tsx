@@ -9,6 +9,7 @@ import {
 } from "react";
 import { RiArrowDownSLine as IconChevronDown } from "react-icons/ri";
 
+import { type Assign } from "~/types/object";
 import { type Maybe } from "~/types/util";
 import { cn } from "~/utils/class";
 
@@ -16,7 +17,7 @@ import $style from "./app-input.module.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const AppInput = <TValue extends unknown>(
-  props: HTMLProps<HTMLInputElement> & {
+  props: HTMLProps<HTMLDivElement> & {
     label?: string;
     name: string;
     initialValue?: TValue;
@@ -38,8 +39,9 @@ export const AppInput = <TValue extends unknown>(
 export const AppSelect = ({
   options,
   children,
+  placeholder,
   ...props
-}: HTMLProps<HTMLInputElement> & {
+}: HTMLProps<HTMLDivElement> & {
   label?: string;
   name: string;
   initialValue?: string;
@@ -56,7 +58,21 @@ export const AppSelect = ({
       {...props}
       inputContainerClassName={$style.select}
       input={
-        <select className="flex-1 appearance-none bg-transparent p-3 text-inherit">
+        <select
+          className="flex-1 appearance-none bg-transparent p-3 text-inherit"
+          defaultValue=""
+          placeholder={placeholder}
+        >
+          {placeholder ? (
+            <option
+              key="$$placeholder"
+              disabled
+              className="bg-off-black"
+              value=""
+            >
+              {placeholder}
+            </option>
+          ) : null}
           {options.filter(Boolean).map((option) => {
             return (
               <option
@@ -88,17 +104,21 @@ export const AppInputBase = <TValue, TElement extends ReactElement>({
   inputContainerClassName,
   iconBefore,
   iconAfter,
+  onChange,
   ...props
-}: PropsWithChildren<HTMLProps<HTMLDivElement>> & {
-  label?: string;
-  name: string;
-  initialValue?: TValue;
-  inputContainerClassName?: string;
-  input: TElement;
-  iconBefore?: ReactNode;
-  iconAfter?: ReactNode;
-  onChange?: (val: TValue) => void | never;
-}) => {
+}: Assign<
+  PropsWithChildren<HTMLProps<HTMLDivElement>>,
+  {
+    label?: string;
+    name: string;
+    initialValue?: TValue;
+    inputContainerClassName?: string;
+    input: TElement;
+    iconBefore?: ReactNode;
+    iconAfter?: ReactNode;
+    onChange?: (val: TValue) => void | never;
+  }
+>) => {
   const inputId = useId();
   const inputElId = `input-${name}-${inputId}`;
   const [value, setValue] = useState(initialValue);
@@ -134,7 +154,7 @@ export const AppInputBase = <TValue, TElement extends ReactElement>({
           onChange: (e: { target: { value: TValue } }) => {
             const val = e.target.value;
 
-            props.onChange?.(val);
+            onChange?.(val);
             setValue(val);
           },
         })}
