@@ -144,14 +144,16 @@ const PageContact: NextPage = () => {
             </h1>
 
             <table className="w-full table-fixed border-separate border-spacing-y-5 text-sm tracking-wide">
-              {Object.entries(INFO.basic).map(([key, value]) => {
-                return (
-                  <tr key={key}>
-                    <td className="align-top uppercase opacity-80">{key}</td>
-                    <td className="align-top leading-tight">{value}</td>
-                  </tr>
-                );
-              })}
+              <tbody>
+                {Object.entries(INFO.basic).map(([key, value]) => {
+                  return (
+                    <tr key={key}>
+                      <td className="align-top uppercase opacity-80">{key}</td>
+                      <td className="align-top leading-tight">{value}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
           <div>
@@ -160,28 +162,30 @@ const PageContact: NextPage = () => {
             </h1>
 
             <table className="w-full table-fixed border-separate border-spacing-y-5 text-sm tracking-wide">
-              {Object.entries(INFO.voditelji).map(([key, value]) => {
-                return (
-                  <tr key={key}>
-                    <td className="align-top uppercase opacity-80">{key}</td>
-                    <td className="flex flex-col gap-4 align-top text-sm leading-tight">
-                      {value.map((v) => (
-                        <div key={v.email}>
-                          <h4 className="mb-1.5 text-lg font-bold leading-none">
-                            {v.name}
-                          </h4>
-                          <a
-                            className="leading-tight"
-                            href={`mailto:${v.email}`}
-                          >
-                            {v.email}
-                          </a>
-                        </div>
-                      ))}
-                    </td>
-                  </tr>
-                );
-              })}
+              <tbody>
+                {Object.entries(INFO.voditelji).map(([key, value]) => {
+                  return (
+                    <tr key={key}>
+                      <td className="align-top uppercase opacity-80">{key}</td>
+                      <td className="flex flex-col gap-4 align-top text-sm leading-tight">
+                        {value.map((v) => (
+                          <div key={v.email}>
+                            <h4 className="mb-1.5 text-lg font-bold leading-none">
+                              {v.name}
+                            </h4>
+                            <a
+                              className="leading-tight"
+                              href={`mailto:${v.email}`}
+                            >
+                              {v.email}
+                            </a>
+                          </div>
+                        ))}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         </div>
