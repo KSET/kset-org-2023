@@ -137,6 +137,14 @@ export const galleryRouter = createTRPCRouter({
         where: {
           AND: galleriesFilter,
         },
+        orderBy: [
+          {
+            dateOfEvent: "asc",
+          },
+          {
+            title: "asc",
+          },
+        ],
       });
 
       const entries = galleries.reduce<Record<number, typeof galleries>>(
