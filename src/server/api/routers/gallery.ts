@@ -3,8 +3,12 @@ import { z } from "zod";
 
 import { prisma } from "~/server/db";
 import { utcDate } from "~/utils/date";
+import { dbFieldsOfModel, dbModelFor } from "~/utils/prisma";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
+
+const GalleryAlbumModel = dbModelFor("GalleryAlbum");
+const GalleryAlbumDbFields = dbFieldsOfModel(GalleryAlbumModel);
 
 export const galleryRouter = createTRPCRouter({
   getGalleries: publicProcedure
@@ -57,12 +61,7 @@ export const galleryRouter = createTRPCRouter({
     .input(
       z.object({
         eventType: z.enum(["live", "foto"]),
-        forYear: z
-          .number()
-          .int()
-          .min(2000)
-          .max(2100)
-          .default(new Date().getFullYear()),
+        forYear: z.number().int().default(new Date().getFullYear()),
         filter: z
           .object({
             titleOrPhotographerName: z.string().transform((v) => v.trim()),
@@ -169,4 +168,16 @@ export const galleryRouter = createTRPCRouter({
         groupedByMonth: entries,
       };
     }),
+
+  getYearsWithEvents: publicProcedure.query(async () => {
+    const eventYears: { date: number }[] = await prisma.$queryRawUnsafe(
+      `select distinct date_part('year', ${
+        GalleryAlbumDbFields.dateOfEvent
+      }) as date from "${
+        GalleryAlbumModel.dbName ?? ""
+      }" order by date_part('year', ${GalleryAlbumDbFields.dateOfEvent}) desc`,
+    );
+
+    return eventYears.map((e) => e.date);
+  }),
 });

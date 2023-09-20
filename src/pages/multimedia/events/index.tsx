@@ -127,6 +127,12 @@ type Props = ServerSideProps<typeof getServerSideProps>;
 
 const PageMultimediaEventsHome: NextPage<Props> = (props) => {
   const forYear = props.year ?? new Date().getFullYear();
+  const [galleryEventYears] = api.gallery.getYearsWithEvents.useSuspenseQuery(
+    undefined,
+    {
+      cacheTime: 60 * 1000,
+    },
+  );
 
   return (
     <>
@@ -146,16 +152,12 @@ const PageMultimediaEventsHome: NextPage<Props> = (props) => {
           label="Godina"
           name="year"
           queryKey={QUERY_KEY_FOR.year}
-          options={[
-            {
-              label: "2023",
-              value: "2023",
-            },
-            {
-              label: "2022",
-              value: "2022",
-            },
-          ]}
+          options={galleryEventYears.map((year) => {
+            return {
+              label: String(year),
+              value: String(year),
+            };
+          })}
         />
       </div>
       <LoadingArea
