@@ -75,16 +75,17 @@ const GalleryList: FC<{
             key={month}
             className="grid grid-cols-1 gap-4 br:grid-cols-[12ch,1fr] br:gap-8"
           >
-            <h3 className="text-2xl font-extrabold capitalize tracking-wide opacity-25">
-              {monthFormatter.format(
-                utcDate({
-                  year: props.forYear,
-                  month: Number(month),
-                  day: 1,
-                }),
-              )}
-              <br />
-              {data.forYear}.
+            <h3 className="flex gap-x-2 text-2xl font-extrabold capitalize tracking-wide opacity-25 br:flex-col">
+              <span>
+                {monthFormatter.format(
+                  utcDate({
+                    year: props.forYear,
+                    month: Number(month),
+                    day: 1,
+                  }),
+                )}
+              </span>
+              <span>{`${data.forYear}.`}</span>
             </h3>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 br:grid-cols-3 br:gap-x-10 br:gap-y-16">
               {galleries.map((gallery) => {
