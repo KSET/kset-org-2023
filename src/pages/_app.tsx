@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type AppContext, type AppType } from "next/app";
 import NextApp from "next/app";
 import Head from "next/head";
+import Script from "next/script";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
@@ -54,6 +55,14 @@ const MyApp: AppType<{
         <meta content="10000" property="og:postal-code" />
         <meta content="Croatia" property="og:country-name" />
       </Head>
+      <Script
+        async
+        defer
+        crossOrigin="anonymous"
+        data-api="/pevts/api/event"
+        data-domain="novi.kset.org"
+        src="/pevts/js/script.outbound-links.js"
+      />
       <DefaultSeo
         description="Klub studenata elektrotehnike, poznatiji kao KSET je zagrebački klub i okupljalište studenata Fakulteta elektrotehnike i računarstva (FER)."
         title="Klub studenata elektrotehnike"
