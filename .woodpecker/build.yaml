@@ -1,0 +1,28 @@
+when:
+  - event: push
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+
+steps:
+  - name: env
+    image: alpine
+    commands:
+      - env
+  - name: build
+    image: docker
+    environment:
+      _DOCKER_BUILD_IMAGE: "index.docker.io/ksetcomp/kset-org-2023"
+      _DOCKER_USERNAME:
+        from_secret: DOCKER_HUB_USERNAME
+      _DOCKER_PASSWORD:
+        from_secret: DOCKER_HUB_PASSWORD
+    commands:
+      - echo "Building '$_DOCKER_BUILD_IMAGE:${CI_COMMIT_SHA}' on '${CI_MACHINE}'"
+      - docker build --label 'org.kset.tag=kset-org-2023' -t "$_DOCKER_BUILD_IMAGE":latest -t "$_DOCKER_BUILD_IMAGE":"${CI_COMMIT_SHA}" -f ./.docker/app/Dockerfile .
+      - echo "Logging into docker registry"
+      - docker login -u "$_DOCKER_USERNAME" -p "$_DOCKER_PASSWORD"
+      - echo "Pushing '$_DOCKER_BUILD_IMAGE:${CI_COMMIT_SHA}'"
+      - docker push --all-tags "$_DOCKER_BUILD_IMAGE"
+      - docker image rm "$_DOCKER_BUILD_IMAGE:${CI_COMMIT_SHA}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
