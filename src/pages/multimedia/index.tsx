@@ -9,7 +9,7 @@ const items = [
     title: "Izložbe",
     description: "Galerija svih izložbi u ksetu",
     link: "#",
-    image: "https://placekitten.com/1200/630",
+    image: "https://placecats.com/300/200",
   },
   {
     title: "Video arhiva",

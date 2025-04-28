@@ -67,14 +67,22 @@ const SectionUpcomingEvents: FC = () => {
   if (upcomingEvents.length === 0) {
     return null;
   }
-
+  const gridColsClass =
+    upcomingEvents.length >= 5
+      ? "br:grid-cols-5"
+      : `br:grid-cols-${upcomingEvents.length}`;
   return (
     <section className="mb-24 br:mb-56">
       <h2 className="mb-4 text-lg font-bold uppercase tracking-[0.1325em] opacity-30">
         Nadolazeći događaji
       </h2>
-      <div className="grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3 br:grid-cols-5">
-        {upcomingEvents.map((event) => (
+      <div
+        className={cn(
+          "grid auto-rows-[0] grid-cols-1 grid-rows-1 gap-x-[--border-width] overflow-y-hidden bg-white/20 px-[--border-width] [--border-width:1px] sm:grid-cols-2 md:grid-cols-3",
+          gridColsClass
+        )}
+      >
+          {upcomingEvents.map((event) => (
           <EventItem key={event.id} className="bg-off-black" item={event} />
         ))}
       </div>
@@ -259,7 +267,7 @@ const SectionQuiz: FC = () => {
           className="bg-primary px-7 py-3 font-bold tracking-wide text-secondary br:mt-auto"
           type="button"
         >
-          OTKRIJ KOJA SI SEKCIJA
+          OTKRIJ KOJE SEKCIJE POSTOJE
         </button>
       </div>
     </div>

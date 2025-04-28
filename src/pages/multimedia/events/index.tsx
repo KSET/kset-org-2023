@@ -69,7 +69,9 @@ const GalleryList: FC<{
 
   return (
     <>
-      {Object.entries(data.groupedByMonth).map(([month, galleries]) => {
+      {Object.entries(data.groupedByMonth)
+      .reverse()
+      .map(([month, galleries]) => {
         return (
           <div
             key={month}

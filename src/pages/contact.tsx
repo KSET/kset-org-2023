@@ -69,7 +69,7 @@ const INFO = {
     ],
     računarska: [
       {
-        name: "Jakov Ivković",
+        name: "gREGOR",
         email: "jakov.ivkovic@kset.org",
       },
     ],
@@ -130,11 +130,17 @@ const PageContact: NextPage = () => {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold uppercase tracking-widest opacity-30">
-              Lokacija
-            </h1>
+          <h1 className="text-2xl font-bold uppercase tracking-widest opacity-30">
+  Lokacija
+</h1>
 
-            <div className="mt-9 aspect-[7/3] bg-gradient-to-br from-stone-300 from-40% to-green-300" />
+<iframe
+  className="mt-9 aspect-[7/3] w-full rounded-lg shadow-lg"
+  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d173.84028951533534!2d15.989286329996037!3d45.802352953219355!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765d72f3c838333%3A0x999be8464569cb25!2sKSET%202!5e0!3m2!1shr!2shr!4v1741395220375!5m2!1shr!2shr"
+  allowFullScreen
+  loading="lazy"
+  referrerPolicy="no-referrer-when-downgrade"
+/>
           </div>
         </div>
         <div className="flex flex-col gap-16">
