@@ -67,16 +67,16 @@ export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
     <div className="ml-10">
       <ul className={cn("space-y-4 leading-none")}>
         <li className="flex uppercase">
-          <IconChevronRight className="mr-1 text-primary" />
-          <a href="https://www.facebook.com/KSETZg/">Facebook</a>
+          <IconChevronRight className="mr-3 text-primary" />
+          <a href="">SS FER</a>
         </li>
         <li className="flex uppercase">
-          <IconChevronRight className="mr-1 text-primary" />
-          <a href="https://www.instagram.com/klubkset">Instagram</a>
+          <IconChevronRight className="mr-3 text-primary" />
+          <a href="">FER</a>
         </li>
         <li className="flex uppercase">
-          <IconChevronRight className="mr-1 text-primary" />
-          <a href="https://www.youtube.com/@KsetVideo">YouTube</a>
+          <IconChevronRight className="mr-3 text-primary" />
+          <a href="">A1</a>
         </li>
       </ul>
     </div>

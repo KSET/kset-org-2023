@@ -58,3 +58,5 @@ docker-compose.*.yaml
 .env.example
 prisma/schema.prisma
 prisma/schema.prisma
+prisma/schema.prisma
+.env.example
