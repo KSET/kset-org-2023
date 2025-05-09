@@ -11,6 +11,7 @@ import {
   ImageCarousel,
   type ImageCarouselPropsStrict,
 } from "~/components/base/carousel/ImageCarousel";
+
 import { LinkWithArrow } from "~/components/base/link/LinkWithIcon";
 import { MainLayout } from "~/layouts/main";
 import { type NextPageWithLayout } from "~/types/layout";
@@ -133,7 +134,7 @@ const PageAboutHome: NextPageWithLayout = () => {
             <div className="flex flex-col gap-6">
               <SidebarCard
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus. Vestibulum ante ipsum primis in faucibus orci"
-                title="Kako se učlaniti?"
+                title="Sekcije"
               >
                 <LinkWithArrow className="mt-12 uppercase" href="#">
                   Saznaj više
@@ -157,7 +158,14 @@ const PageAboutHome: NextPageWithLayout = () => {
                   Saznaj više
                 </LinkWithArrow>
               </SidebarCard>
-
+              <SidebarCard
+                text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in laoreet lectus. Vestibulum ante ipsum primis in faucibus orci"
+                title="Partneri"
+              >
+                <LinkWithArrow className="mt-12 uppercase" href="#">
+                  Saznaj više
+                </LinkWithArrow>
+              </SidebarCard>
               <SidebarCard title="Društvene mreže">
                 <ul className="mt-3 text-xl leading-loose">
                   {SOCIAL_LINKS.map(({ icon, label, link }) => {

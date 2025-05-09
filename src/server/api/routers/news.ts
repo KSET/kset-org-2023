@@ -100,3 +100,9 @@ export const newsRouter = createTRPCRouter({
       return news;
     }),
 });
+
+
+{/* 
+  TU DODATI ZA DOBIVANJE TAGOVA AKO TO IMA MATICNA BAZA?
+  */}
+

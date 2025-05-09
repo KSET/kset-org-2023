@@ -8,27 +8,21 @@ datasource db {
 }
 
 model AuthGroup {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(80)
-
-  groupPermissions AuthGroupPermission[]
-
-  userGroups AuthUserGroup[]
-
+  id                            Int                             @id @default(autoincrement())
+  name                          String                          @unique @db.VarChar(80)
+  groupPermissions              AuthGroupPermission[]
+  userGroups                    AuthUserGroup[]
   grappelliNavigationItemGroups GrappelliNavigationItemGroup[]
-
   guardianGroupObjectPermission GuardianGroupObjectPermission[]
 
   @@map("auth_group")
 }
 
 model AuthGroupPermission {
-  id Int @id @default(autoincrement())
-
-  groupId Int       @map("group_id")
-  group   AuthGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id           Int            @id @default(autoincrement())
+  groupId      Int            @map("group_id")
   permissionId Int            @map("permission_id")
+  group        AuthGroup      @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   permission   AuthPermission @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, permissionId], map: "auth_group_permissions_group_id_key")
@@ -36,31 +30,25 @@ model AuthGroupPermission {
 }
 
 model AuthMessage {
-  id      Int    @id @default(autoincrement())
+  id      Int      @id @default(autoincrement())
+  userId  Int      @map("user_id")
   message String
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user    AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([userId], map: "auth_message_user_id")
   @@map("auth_message")
 }
 
 model AuthPermission {
-  id       Int    @id @default(autoincrement())
-  name     String @db.VarChar(50)
-  codename String @db.VarChar(100)
-
-  authGroupPermissions AuthGroupPermission[]
-
-  contentTypeId Int               @map("content_type_id")
-  contentType   DjangoContentType @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_type_id_refs_id_728de91f")
-
-  authUserUserPermissions AuthUserUserPermission[]
-
+  id                             Int                             @id @default(autoincrement())
+  name                           String                          @db.VarChar(50)
+  contentTypeId                  Int                             @map("content_type_id")
+  codename                       String                          @db.VarChar(100)
+  authGroupPermissions           AuthGroupPermission[]
+  contentType                    DjangoContentType               @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "content_type_id_refs_id_728de91f")
+  authUserUserPermissions        AuthUserUserPermission[]
   guardianGroupObjectPermissions GuardianGroupObjectPermission[]
-
-  guardianUserObjectPermissions GuardianUserObjectPermission[]
+  guardianUserObjectPermissions  GuardianUserObjectPermission[]
 
   @@unique([contentTypeId, codename], map: "auth_permission_content_type_id_key")
   @@index([contentTypeId], map: "auth_permission_content_type_id")
@@ -68,78 +56,63 @@ model AuthPermission {
 }
 
 model AuthUser {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique @db.VarChar(30)
-  firstName   String   @map("first_name") @db.VarChar(30)
-  lastName    String   @map("last_name") @db.VarChar(30)
-  email       String   @db.VarChar(75)
-  password    String   @db.VarChar(128)
-  isStaff     Boolean  @map("is_staff")
-  isActive    Boolean  @map("is_active")
-  isSuperuser Boolean  @map("is_superuser")
-  lastLogin   DateTime @map("last_login") @db.Timestamptz(6)
-  dateJoined  DateTime @map("date_joined") @db.Timestamptz(6)
-
-  authMessages AuthMessage[]
-
-  userGroups AuthUserGroup[]
-
-  authUserUserPermissions AuthUserUserPermission[]
-
-  djangoAdminLogs DjangoAdminLog[]
-
-  events ClubEvent[]
-
-  grappelliBookmarks GrappelliBookmark[]
-
-  grappelliNavigationItemUsers GrappelliNavigationItemUser[]
-
+  id                            Int                            @id @default(autoincrement())
+  username                      String                         @unique @db.VarChar(30)
+  firstName                     String                         @map("first_name") @db.VarChar(30)
+  lastName                      String                         @map("last_name") @db.VarChar(30)
+  email                         String                         @db.VarChar(75)
+  password                      String                         @db.VarChar(128)
+  isStaff                       Boolean                        @map("is_staff")
+  isActive                      Boolean                        @map("is_active")
+  isSuperuser                   Boolean                        @map("is_superuser")
+  lastLogin                     DateTime                       @map("last_login") @db.Timestamptz(6)
+  dateJoined                    DateTime                       @map("date_joined") @db.Timestamptz(6)
+  authMessages                  AuthMessage[]
+  userGroups                    AuthUserGroup[]
+  authUserUserPermissions       AuthUserUserPermission[]
+  djangoAdminLogs               DjangoAdminLog[]
+  events                        ClubEvent[]
+  grappelliBookmarks            GrappelliBookmark[]
+  grappelliNavigationItemUsers  GrappelliNavigationItemUser[]
   guardianUserObjectPermissions GuardianUserObjectPermission[]
-
-  savjetZapisniks SavjetZapisnik[]
+  savjetZapisniks               SavjetZapisnik[]
 
   @@map("auth_user")
 }
 
 model AuthUserGroup {
-  id Int @id @default(autoincrement())
-
+  id      Int       @id @default(autoincrement())
+  userId  Int       @map("user_id")
   groupId Int       @map("group_id")
   group   AuthGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user    AuthUser  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([userId, groupId], map: "auth_user_groups_user_id_key")
   @@map("auth_user_groups")
 }
 
 model AuthUserUserPermission {
-  id Int @id @default(autoincrement())
-
+  id           Int            @id @default(autoincrement())
+  userId       Int            @map("user_id")
   permissionId Int            @map("permission_id")
   permission   AuthPermission @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         AuthUser       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([userId, permissionId], map: "auth_user_user_permissions_user_id_key")
   @@map("auth_user_user_permissions")
 }
 
 model DjangoAdminLog {
-  id            Int      @id @default(autoincrement())
-  actionTime    DateTime @map("action_time") @db.Timestamptz(6)
-  objectId      String?  @map("object_id")
-  objectRepr    String   @map("object_repr") @db.VarChar(200)
-  actionFlag    Int      @map("action_flag") @db.SmallInt
-  changeMessage String   @map("change_message")
-
+  id            Int                @id @default(autoincrement())
+  actionTime    DateTime           @map("action_time") @db.Timestamptz(6)
+  userId        Int                @map("user_id")
   contentTypeId Int?               @map("content_type_id")
+  objectId      String?            @map("object_id")
+  objectRepr    String             @map("object_repr") @db.VarChar(200)
+  actionFlag    Int                @map("action_flag") @db.SmallInt
+  changeMessage String             @map("change_message")
   contentType   DjangoContentType? @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user          AuthUser           @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([contentTypeId], map: "django_admin_log_content_type_id")
   @@index([userId], map: "django_admin_log_user_id")
@@ -147,35 +120,29 @@ model DjangoAdminLog {
 }
 
 model DjangoContentType {
-  id       Int    @id @default(autoincrement())
-  name     String @db.VarChar(100)
-  appLabel String @map("app_label") @db.VarChar(100)
-  model    String @db.VarChar(100)
-
-  permissions AuthPermission[]
-
-  djangoAdminLogs DjangoAdminLog[]
-
+  id                             Int                             @id @default(autoincrement())
+  name                           String                          @db.VarChar(100)
+  appLabel                       String                          @map("app_label") @db.VarChar(100)
+  model                          String                          @db.VarChar(100)
+  permissions                    AuthPermission[]
+  djangoAdminLogs                DjangoAdminLog[]
   guardianGroupObjectPermissions GuardianGroupObjectPermission[]
-
-  guardianUserObjectPermissions GuardianUserObjectPermission[]
-
-  taggingTaggedItem TaggingTaggedItem[]
+  guardianUserObjectPermissions  GuardianUserObjectPermission[]
+  taggingTaggedItem              TaggingTaggedItem[]
 
   @@unique([appLabel, model], map: "django_content_type_app_label_key")
   @@map("django_content_type")
 }
 
 model DjangoFlatpage {
-  id                   Int     @id @default(autoincrement())
-  url                  String  @db.VarChar(100)
-  title                String  @db.VarChar(200)
+  id                   Int                  @id @default(autoincrement())
+  url                  String               @db.VarChar(100)
+  title                String               @db.VarChar(200)
   content              String
-  enableComments       Boolean @map("enable_comments")
-  templateName         String  @map("template_name") @db.VarChar(70)
-  registrationRequired Boolean @map("registration_required")
-
-  flatpageSites DjangoFlatpageSite[]
+  enableComments       Boolean              @map("enable_comments")
+  templateName         String               @map("template_name") @db.VarChar(70)
+  registrationRequired Boolean              @map("registration_required")
+  flatpageSites        DjangoFlatpageSite[]
 
   @@index([url], map: "django_flatpage_url")
   @@index([url], map: "django_flatpage_url_like")
@@ -183,12 +150,10 @@ model DjangoFlatpage {
 }
 
 model DjangoFlatpageSite {
-  id Int @id @default(autoincrement())
-
-  siteId Int        @map("site_id")
-  site   DjangoSite @relation(fields: [siteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id         Int            @id @default(autoincrement())
   flatpageId Int            @map("flatpage_id")
+  siteId     Int            @map("site_id")
+  site       DjangoSite     @relation(fields: [siteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   flatpage   DjangoFlatpage @relation(fields: [flatpageId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "flatpage_id_refs_id_c0e84f5a")
 
   @@unique([flatpageId, siteId], map: "django_flatpage_sites_flatpage_id_key")
@@ -206,10 +171,9 @@ model DjangoSession {
 }
 
 model DjangoSite {
-  id     Int    @id @default(autoincrement())
-  domain String @db.VarChar(100)
-  name   String @db.VarChar(50)
-
+  id            Int                  @id @default(autoincrement())
+  domain        String               @db.VarChar(100)
+  name          String               @db.VarChar(50)
   flatpageSites DjangoFlatpageSite[]
 
   @@map("django_site")
@@ -229,29 +193,26 @@ model ClubEvent {
   daytime     Boolean?  @default(false)
   tags        String[]
   fbEventId   String?   @map("fbeventid") @db.VarChar(25)
-
-  authorId Int?      @map("author_id")
-  author   AuthUser? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_id_refs_id_8795bcdc")
+  authorId    Int?      @map("author_id")
+  author      AuthUser? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_id_refs_id_8795bcdc")
 
   @@index([authorId], map: "events_event_author_id")
   @@map("events_event")
 }
 
 model GalleryAlbum {
-  id           Int      @id @default(autoincrement())
-  uploadPath   String?  @map("upload_path") @db.VarChar(255)
-  title        String   @db.VarChar(255)
-  slug         String   @db.VarChar(50)
-  description  String   @db.VarChar(255)
-  dateOfEvent  DateTime @map("date_of_event") @db.Date
-  dateOfUpload DateTime @map("date_of_upload") @db.Timestamptz(6)
-  initial      Boolean
-  thumb        String   @db.VarChar(255)
-  category     String   @db.VarChar(25)
-
-  photographerId Int?                 @default(1) @map("photographer_id")
-  photographer   GalleryPhotographer? @relation(fields: [photographerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_photographer_id")
-
+  id                Int                  @id @default(autoincrement())
+  uploadPath        String?              @map("upload_path") @db.VarChar(255)
+  title             String               @db.VarChar(255)
+  slug              String               @db.VarChar(50)
+  description       String               @db.VarChar(255)
+  dateOfEvent       DateTime             @map("date_of_event") @db.Date
+  dateOfUpload      DateTime             @map("date_of_upload") @db.Timestamptz(6)
+  initial           Boolean
+  thumb             String               @db.VarChar(255)
+  category          String               @db.VarChar(25)
+  photographerId    Int?                 @default(1) @map("photographer_id")
+  photographer      GalleryPhotographer? @relation(fields: [photographerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_photographer_id")
   galleryImageAlbum GalleryImageAlbum[]
 
   @@index([slug], map: "gallery_album_slug")
@@ -260,17 +221,15 @@ model GalleryAlbum {
 }
 
 model GalleryImage {
-  id           Int      @id @default(autoincrement())
-  title        String   @db.VarChar(255)
-  slug         String   @db.VarChar(255)
-  caption      String?  @db.VarChar(255)
-  dateOfEvent  DateTime @map("date_of_event") @db.Date
-  dateOfUpload DateTime @map("date_of_upload") @db.Timestamptz(6)
-  uploadPath   String   @map("upload_path") @db.VarChar(255)
-
-  photographerId Int?                 @map("photographer_id")
-  photographer   GalleryPhotographer? @relation(fields: [photographerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "photographer_id_refs_id_dbca34de")
-
+  id                Int                  @id @default(autoincrement())
+  title             String               @db.VarChar(255)
+  slug              String               @db.VarChar(255)
+  caption           String?              @db.VarChar(255)
+  photographerId    Int?                 @map("photographer_id")
+  dateOfEvent       DateTime             @map("date_of_event") @db.Date
+  dateOfUpload      DateTime             @map("date_of_upload") @db.Timestamptz(6)
+  uploadPath        String               @map("upload_path") @db.VarChar(255)
+  photographer      GalleryPhotographer? @relation(fields: [photographerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "photographer_id_refs_id_dbca34de")
   galleryImageAlbum GalleryImageAlbum[]
 
   @@index([photographerId], map: "gallery_image_photographer_id")
@@ -280,12 +239,10 @@ model GalleryImage {
 }
 
 model GalleryImageAlbum {
-  id Int @id @default(autoincrement())
-
+  id      Int          @id @default(autoincrement())
+  imageId Int          @map("image_id")
   albumId Int          @map("album_id")
   album   GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "album_id_refs_id_c27f8e91")
-
-  imageId Int          @map("image_id")
   image   GalleryImage @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_id_refs_id_41ea0efd")
 
   @@unique([imageId, albumId], map: "gallery_image_album_image_id_key")
@@ -295,23 +252,19 @@ model GalleryImageAlbum {
 }
 
 model GalleryPhotographer {
-  id   Int     @id @default(autoincrement())
-  name String  @db.VarChar(32)
-  url  String? @db.VarChar(255)
-
+  id     Int            @id @default(autoincrement())
+  name   String         @db.VarChar(32)
+  url    String?        @db.VarChar(255)
   albums GalleryAlbum[]
-
   images GalleryImage[]
 
   @@map("gallery_photographer")
 }
 
 model GrappelliBookmark {
-  id Int @id @default(autoincrement())
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id           Int                     @id @default(autoincrement())
+  userId       Int                     @map("user_id")
+  user         AuthUser                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   bookmarkItem GrappelliBookmarkItem[]
 
   @@index([userId], map: "grappelli_bookmark_user_id")
@@ -319,12 +272,11 @@ model GrappelliBookmark {
 }
 
 model GrappelliBookmarkItem {
-  id    Int    @id @default(autoincrement())
-  title String @db.VarChar(80)
-  link  String @db.VarChar(200)
-  order Int
-
+  id         Int               @id @default(autoincrement())
   bookmarkId Int               @map("bookmark_id")
+  title      String            @db.VarChar(80)
+  link       String            @db.VarChar(200)
+  order      Int
   bookmark   GrappelliBookmark @relation(fields: [bookmarkId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([bookmarkId], map: "grappelli_bookmarkitem_bookmark_id")
@@ -332,23 +284,21 @@ model GrappelliBookmarkItem {
 }
 
 model GrappelliHelp {
-  id    Int    @id @default(autoincrement())
-  title String @db.VarChar(50)
-  order Int
-
+  id       Int                 @id @default(autoincrement())
+  title    String              @db.VarChar(50)
+  order    Int
   helpItem GrappelliHelpItem[]
 
   @@map("grappelli_help")
 }
 
 model GrappelliHelpItem {
-  id    Int    @id @default(autoincrement())
-  title String @db.VarChar(200)
-  link  String @db.VarChar(200)
-  body  String
-  order Int
-
+  id     Int           @id @default(autoincrement())
   helpId Int           @map("help_id")
+  title  String        @db.VarChar(200)
+  link   String        @db.VarChar(200)
+  body   String
+  order  Int
   help   GrappelliHelp @relation(fields: [helpId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([helpId], map: "grappelli_helpitem_help_id")
@@ -356,40 +306,34 @@ model GrappelliHelpItem {
 }
 
 model GrappelliNavigation {
-  id    Int    @id @default(autoincrement())
-  title String @db.VarChar(30)
-  order Int
-
+  id             Int                       @id @default(autoincrement())
+  title          String                    @db.VarChar(30)
+  order          Int
   navigationItem GrappelliNavigationItem[]
 
   @@map("grappelli_navigation")
 }
 
 model GrappelliNavigationItem {
-  id       Int    @id @default(autoincrement())
-  title    String @db.VarChar(30)
-  link     String @db.VarChar(200)
-  category String @db.VarChar(1)
-  order    Int
-
-  navigationId Int                 @map("navigation_id")
-  navigation   GrappelliNavigation @relation(fields: [navigationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id                   Int                            @id @default(autoincrement())
+  navigationId         Int                            @map("navigation_id")
+  title                String                         @db.VarChar(30)
+  link                 String                         @db.VarChar(200)
+  category             String                         @db.VarChar(1)
+  order                Int
+  navigation           GrappelliNavigation            @relation(fields: [navigationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   navigationItemGroups GrappelliNavigationItemGroup[]
-
-  navigationItemUsers GrappelliNavigationItemUser[]
+  navigationItemUsers  GrappelliNavigationItemUser[]
 
   @@index([navigationId], map: "grappelli_navigationitem_navigation_id")
   @@map("grappelli_navigationitem")
 }
 
 model GrappelliNavigationItemGroup {
-  id Int @id @default(autoincrement())
-
-  groupId Int       @map("group_id")
-  group   AuthGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id               Int                     @id @default(autoincrement())
   navigationItemId Int                     @map("navigationitem_id")
+  groupId          Int                     @map("group_id")
+  group            AuthGroup               @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   navigationItem   GrappelliNavigationItem @relation(fields: [navigationItemId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "navigationitem_id_refs_id_8f2cd403")
 
   @@unique([navigationItemId, groupId], map: "grappelli_navigationitem_groups_navigationitem_id_key")
@@ -399,12 +343,10 @@ model GrappelliNavigationItemGroup {
 }
 
 model GrappelliNavigationItemUser {
-  id Int @id @default(autoincrement())
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+  id               Int                     @id @default(autoincrement())
   navigationItemId Int                     @map("navigationitem_id")
+  userId           Int                     @map("user_id")
+  user             AuthUser                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   navigationItem   GrappelliNavigationItem @relation(fields: [navigationItemId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "navigationitem_id_refs_id_fbdd09fc")
 
   @@unique([navigationItemId, userId], map: "grappelli_navigationitem_users_navigationitem_id_key")
@@ -414,17 +356,14 @@ model GrappelliNavigationItemUser {
 }
 
 model GuardianGroupObjectPermission {
-  id       Int    @id @default(autoincrement())
-  objectPk String @map("object_pk") @db.VarChar(255)
-
+  id            Int               @id @default(autoincrement())
+  permissionId  Int               @map("permission_id")
   contentTypeId Int               @map("content_type_id")
+  objectPk      String            @map("object_pk") @db.VarChar(255)
+  groupId       Int               @map("group_id")
   contentType   DjangoContentType @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  groupId Int       @map("group_id")
-  group   AuthGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  permissionId Int            @map("permission_id")
-  permission   AuthPermission @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group         AuthGroup         @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  permission    AuthPermission    @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, permissionId, contentTypeId, objectPk], map: "guardian_groupobjectpermission_group_id_key")
   @@index([contentTypeId], map: "guardian_groupobjectpermission_content_type_id")
@@ -434,17 +373,14 @@ model GuardianGroupObjectPermission {
 }
 
 model GuardianUserObjectPermission {
-  id       Int    @id @default(autoincrement())
-  objectPk String @map("object_pk") @db.VarChar(255)
-
+  id            Int               @id @default(autoincrement())
+  permissionId  Int               @map("permission_id")
   contentTypeId Int               @map("content_type_id")
+  objectPk      String            @map("object_pk") @db.VarChar(255)
+  userId        Int               @map("user_id")
   contentType   DjangoContentType @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  permissionId Int            @map("permission_id")
-  permission   AuthPermission @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  userId Int      @map("user_id")
-  user   AuthUser @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  permission    AuthPermission    @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user          AuthUser          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([userId, permissionId, contentTypeId, objectPk], map: "guardian_userobjectpermission_user_id_key")
   @@index([contentTypeId], map: "guardian_userobjectpermission_content_type_id")
@@ -454,14 +390,13 @@ model GuardianUserObjectPermission {
 }
 
 model MemberAddress {
-  id      Int     @id @default(autoincrement())
-  address String  @db.VarChar(64)
-  town    String? @db.VarChar(32)
-  zipcode String? @db.VarChar(16)
-  country String? @db.VarChar(32)
-
-  memberId Int    @map("member_id")
-  member   Member @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id       Int     @id @default(autoincrement())
+  memberId Int     @map("member_id")
+  address  String  @db.VarChar(64)
+  town     String? @db.VarChar(32)
+  zipcode  String? @db.VarChar(16)
+  country  String? @db.VarChar(32)
+  member   Member  @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([memberId], map: "members_address_member_id")
   @@map("members_address")
@@ -479,16 +414,13 @@ model MemberContact {
 }
 
 model MemberGroup {
-  id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(32)
-  slug        String  @db.VarChar(50)
-  description String? @db.VarChar(128)
-
-  parentId Int?         @map("parent_id")
-  parent   MemberGroup? @relation("members_groupTomembers_group", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "parent_id_refs_id_bf804683")
-
-  children MemberGroup[] @relation("members_groupTomembers_group")
-
+  id                     Int                     @id @default(autoincrement())
+  name                   String                  @db.VarChar(32)
+  slug                   String                  @db.VarChar(50)
+  parentId               Int?                    @map("parent_id")
+  description            String?                 @db.VarChar(128)
+  parent                 MemberGroup?            @relation("members_groupTomembers_group", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "parent_id_refs_id_bf804683")
+  children               MemberGroup[]           @relation("members_groupTomembers_group")
   memberMemberGroupLinks MemberMemberGroupLink[]
 
   @@index([parentId], map: "members_group_parent_id")
@@ -520,41 +452,38 @@ model MembersImport {
 }
 
 model Member {
-  id                  Int       @id @default(autoincrement())
-  cardId              String?   @map("card_id") @db.VarChar(32)
-  name                String    @db.VarChar(32)
-  surname             String    @db.VarChar(64)
-  nickname            String?   @db.VarChar(32)
-  username            String    @unique @db.VarChar(32)
-  password            String?   @db.VarChar(255)
-  birth               DateTime? @db.Date
-  death               DateTime? @db.Date
-  comment             String?
-  image               String?   @db.VarChar(100)
-  joinDate            DateTime? @map("join_date") @db.Date
-  leaveDate           DateTime? @map("leave_date") @db.Date
-  oib                 String?   @db.VarChar(11)
-  college             String?   @db.VarChar(100)
-  collegeConfirmation Boolean   @map("college_confirmation")
-  gender              String?   @db.VarChar(255)
-  membershipPaid      Boolean   @map("membership_paid")
-
-  memberAddresses MemberAddress[]
-
+  id                      Int                      @id @default(autoincrement())
+  cardId                  String?                  @map("card_id") @db.VarChar(32)
+  name                    String                   @db.VarChar(32)
+  surname                 String                   @db.VarChar(64)
+  nickname                String?                  @db.VarChar(32)
+  username                String                   @unique @db.VarChar(32)
+  password                String?                  @db.VarChar(255)
+  birth                   DateTime?                @db.Date
+  death                   DateTime?                @db.Date
+  comment                 String?
+  image                   String?                  @db.VarChar(100)
+  joinDate                DateTime?                @map("join_date") @db.Date
+  leaveDate               DateTime?                @map("leave_date") @db.Date
+  oib                     String?                  @db.VarChar(11)
+  college                 String?                  @db.VarChar(100)
+  collegeConfirmation     Boolean                  @map("college_confirmation")
+  gender                  String?                  @db.VarChar(255)
+  membershipPaid          Boolean                  @map("membership_paid")
+  memberAddresses         MemberAddress[]
   memberResetPasswordLink MemberResetPasswordLink?
 
   @@map("members_member")
 }
 
 model MemberMemberGroupLink {
-  id         Int       @id @default(autoincrement())
-  memberId   Int       @map("member_id")
-  dateStart  DateTime? @map("date_start") @db.Date
-  dateEnd    DateTime? @map("date_end") @db.Date
-  cardNumber String?   @map("card_number") @db.VarChar(10)
-
-  groupId Int         @map("group_id")
-  group   MemberGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id         Int         @id @default(autoincrement())
+  memberId   Int         @map("member_id")
+  groupId    Int         @map("group_id")
+  dateStart  DateTime?   @map("date_start") @db.Date
+  dateEnd    DateTime?   @map("date_end") @db.Date
+  cardNumber String?     @map("card_number") @db.VarChar(10)
+  group      MemberGroup @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([groupId], map: "members_membergrouplink_group_id")
   @@index([memberId], map: "members_membergrouplink_member_id")
@@ -563,11 +492,10 @@ model MemberMemberGroupLink {
 
 model MemberResetPasswordLink {
   id         Int      @id @default(autoincrement())
+  memberId   Int      @unique @map("member_id")
   uniqueLink String   @unique @map("unique_link") @db.VarChar(255)
   createdAt  DateTime @map("created_at") @db.Timestamptz(6)
-
-  memberId Int    @unique @map("member_id")
-  member   Member @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_id_refs_id_3304e2d0")
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_id_refs_id_3304e2d0")
 
   @@index([uniqueLink], map: "members_resetpasswordlink_unique_link_like")
   @@map("members_resetpasswordlink")
@@ -604,12 +532,11 @@ model SavjetDezurstva {
 }
 
 model SavjetZapisnik {
-  id      Int      @id @default(autoincrement())
-  date    DateTime @db.Timestamptz(6)
-  title   String   @db.VarChar(100)
-  content String?
-
+  id       Int       @id @default(autoincrement())
   authorId Int?      @map("author_id")
+  date     DateTime  @db.Timestamptz(6)
+  title    String    @db.VarChar(100)
+  content  String?
   author   AuthUser? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_id_refs_id_25a8e88d")
 
   @@index([authorId], map: "savjet_zapisnik_author_id")
@@ -626,23 +553,20 @@ model SouthMigrationHistory {
 }
 
 model TaggingTag {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(50)
-
+  id    Int                 @id @default(autoincrement())
+  name  String              @unique @db.VarChar(50)
   items TaggingTaggedItem[]
 
   @@map("tagging_tag")
 }
 
 model TaggingTaggedItem {
-  id       Int @id @default(autoincrement())
-  objectId Int @map("object_id")
-
+  id            Int               @id @default(autoincrement())
+  tagId         Int               @map("tag_id")
   contentTypeId Int               @map("content_type_id")
+  objectId      Int               @map("object_id")
   contentType   DjangoContentType @relation(fields: [contentTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  tagId Int        @map("tag_id")
-  tag   TaggingTag @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tag           TaggingTag        @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([tagId, contentTypeId, objectId], map: "tagging_taggeditem_tag_id_key")
   @@index([contentTypeId], map: "tagging_taggeditem_content_type_id")

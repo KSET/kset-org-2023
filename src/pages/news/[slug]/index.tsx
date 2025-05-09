@@ -105,7 +105,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
     <>
       <Seo newsItem={newsItem} />
 
-      <div className="container mt-8 grid-cols-[1fr,4fr,1fr] justify-items-center tracking-wide br:mt-32 br:grid">
+      <div className="container mt-8 grid-cols-[1fr,4fr,1fr] justify-items-center tracking-wide br:mt-32 br:grid ">
         <Link
           className="flex items-center gap-1 self-baseline justify-self-start font-bold leading-5 tracking-wider no-underline opacity-80 transition-opacity duration-300 hover:underline hover:opacity-100 hover:duration-0 max-br:mb-4"
           href={{
@@ -136,20 +136,25 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
         </div>
       </div>
 
-      <article className="bg-white text-black">
+      <article className="relative  text-black">
         <div className="bg-gradient-to-b from-off-black from-40% to-40%">
-          <div className="br:container">
-            <VariantImage
-              alt={newsItem.subject}
-              className="h-full w-full"
-              src={thumbSrc}
-              aspect={{
-                ratio: 16 / 8,
-              }}
-            />
+          <div className="relative">
+            <div className="br:container">
+            <div className="absolute top-1/2 left-0 w-full h-1/2 bg-white z-0" />
+
+              <VariantImage
+                alt={newsItem.subject}
+                className="h-full w-full"
+                src={thumbSrc}
+                aspect={{
+                  ratio: 16 / 8,
+                }}
+              />
+            </div>
+
           </div>
-        </div>
-        <div className="float-none clear-none w-auto py-8 br:py-16">
+          </div>
+        <div className="float-none clear-none w-auto py-8 br:py-16 bg-white">
           <div className="flex justify-center br:container">
             <div
               dangerouslySetInnerHTML={{
@@ -158,7 +163,34 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
               className={cn("w-4/5 br:w-2/3", $style.newsContent)}
             />
           </div>
-        </div>
+          <div className="container w-full px-4">
+
+          <hr className="mt-16 h-0.5 w-4/5 bg-orange-500 border-0 mx-auto" />
+{/*
+<div className="container  flex flex-wrap gap-2 justify-start p-2">
+  {newsItem.tags?.map((tag) => (
+    <span
+      key={tag}
+      className="text-sm font-medium text-white bg-orange-600 px-3 py-1 rounded-full"
+    >
+      #{tag}
+    </span>
+  ))}
+</div>
+ */}
+  <div className="flex flex-wrap gap-2 justify-start p-2 w-4/5 mx-auto mt-4">
+    {["tech", "kset", "event", "hardkodirano"].map((tag) => (
+      <span
+        key={tag}
+        className="text-sm font-medium text-white bg-orange-600 px-3 py-1 rounded-full"
+      >
+        #{tag}
+      </span>
+    ))}
+  </div>
+</div>
+          </div>
+
       </article>
 
       <div className="container py-14">
@@ -214,6 +246,7 @@ const PageNewsItem: NextPageWithLayout<Props> = ({ slug }) => {
           })}
         </div>
       </div>
+
     </>
   );
 };

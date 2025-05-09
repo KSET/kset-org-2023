@@ -69,7 +69,7 @@ export const Carousel: FC<CarouselProps> & {
 } = ({ children, displayed, options: emblaOptions, ...divProps }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: "center",
+    align: "start", //ZASTO CENTER NE RADI KADA JE PARAN MI NIKADA NECE BITI JASNO
     ...emblaOptions,
   });
   const slideSize = useMemo(() => 100 / (displayed ?? 1), [displayed]);

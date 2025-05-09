@@ -23,21 +23,23 @@ export type ImageCarouselProps = Assign<
 
 export const ImageCarousel: FC<ImageCarouselProps> = ({ images, ...props }) => {
   return (
+    
     <Carousel
-      className="max-br:[--slide-size-override:100%]"
-      displayed={3}
+    className="max-br:[--slide-size-override:100%]"
+    //displayed={3}
       {...props}
     >
       {images.map(({ aspect, ...props }) => {
         return (
           <Carousel.Item key={props.src}>
             <AspectRatio ratio={1.2} {...aspect}>
-              <img
-                className="h-full w-full object-cover"
-                decoding="async"
-                loading="lazy"
-                {...props}
-              />
+            <img
+  style={{ display: 'block' }}
+  className="h-full w-full object-cover"
+  decoding="async"
+  loading="lazy"
+  {...props}
+/>
             </AspectRatio>
           </Carousel.Item>
         );
