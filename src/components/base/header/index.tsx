@@ -33,6 +33,18 @@ export const BaseHeader: FC<HTMLProps<HTMLElement>> = (props) => {
       text: "Multimedija",
       href: "/multimedia",
     },
+    {
+      text: "Shop",
+      href: "/shop",
+    },
+    {
+      text: "EN",
+      href: "/promjena-jezika",
+    },
+    {
+      text: "Ikona lika",
+      href: "/profile",
+    },    
   ] satisfies NavItem[];
 
   return (

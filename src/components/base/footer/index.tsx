@@ -51,9 +51,10 @@ export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full md:w-auto border-b">
+        <div className="flex flex-col w-full md:w-auto ">
           <h4 className="text-xs uppercase tracking-widest text-white/60">Pretplati se na newsletter</h4>
-          <form className="mt-1 flex  overflow-hidden bg-[#2c2b2c] sm:w-[300px]">
+          <form className="mt-1 flex overflow-hidden bg-[#2c2b2c] w-full max-w-[300px]">
+
             <input
               type="email"
               name="email"
@@ -77,8 +78,9 @@ export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
             </button>
           </form>
         </div>
+<div className="flex w-full md:w-auto flex-row gap-10">
 
-        <div className="flex flex-col w-full md:w-auto">
+  <div className="flex flex-col w-1/2 border">
           <ul className="space-y-4 leading-none">
             <li>Pravila i uvijeti korištenja</li>
             <li>Impressum</li>
@@ -89,7 +91,7 @@ export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
           </ul>
         </div>
 
-        <div className="flex flex-col order-last md:order-none md:ml-10">
+  <div className="flex flex-col w-1/2 order-last md:order-none md:ml-10">
           <ul className={cn("space-y-4 leading-none")}>
             <li className="flex uppercase">
               <IconChevronRight className="mr-3 text-primary" />
@@ -105,6 +107,7 @@ export const BaseFooter: FC<HTMLProps<HTMLElement>> = (props) => {
             </li>
           </ul>
         </div>
+      </div>
       </div>
     </footer>
   );
